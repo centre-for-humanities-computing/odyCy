@@ -10,13 +10,6 @@ vars:
 
 directories: ["assets", "corpus", "training", "scripts"]
 
-assets:
-  - dest: "assets/treebanks/"
-    script:
-     - "bash scripts/fetch_treebanks.sh"
-     - "bash scripts/clean_treebanks.sh"
-     - "python3 scripts/join_treebanks.py"
-
 workflows:
   preprocess:
     - install
@@ -36,10 +29,6 @@ commands:
      - "bash scripts/fetch_treebanks.sh"
      - "bash scripts/clean_treebanks.sh"
      - "python3 scripts/join_treebanks.py"
-    outputs:
-     - "/assets/treebanks/joint/dev.conllu"
-     - "/assets/treebanks/joint/test.conllu"
-     - "/assets/treebanks/joint/train.conllu"
   - name: convert
     help: "Convert CONLL-U files to spacy binaries."
     script:
