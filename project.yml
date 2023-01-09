@@ -1,0 +1,48 @@
+title: Training pipeline for Ancient Greek Language Model
+description: >
+  Reproducible workflows for training the ancient greek spaCy pipeline.
+
+vars:
+  lang: "grc"
+  gpu: 0
+  package_version: "0.0.0"
+  spacy_version: ">=3.0.0"
+
+directories: ["assets", "corpus", "training", "scripts"]
+
+assets:
+  - dest: "assets/treebanks/"
+    script:
+     - "bash scripts/fetch_treebanks.sh"
+     - "bash scripts/clean_treebanks.sh"
+     - "python3 scripts/join_treebanks.py"
+
+workflows:
+  preprocess:
+    - install
+    - fetch_assets
+    - convert
+
+commands:
+  - name: install
+    help: "Install dependencies."
+    script:
+     - "pip install -r requirements.txt"
+    deps:
+     - "requirements.txt"
+  - name: fetch_assets
+    help: "Downloads and cleans treebank data."
+    script:
+     - "bash scripts/fetch_treebanks.sh"
+     - "bash scripts/clean_treebanks.sh"
+     - "python3 scripts/join_treebanks.py"
+    outputs:
+     - "/assets/treebanks/joint/dev.conllu"
+     - "/assets/treebanks/joint/test.conllu"
+     - "/assets/treebanks/joint/train.conllu"
+  - name: convert
+    help: "Convert CONLL-U files to spacy binaries."
+    script:
+     - "python3 -m spacy convert assets/treebanks/joint/train.conllu corpus/ --converter conllu"
+     - "python3 -m spacy convert assets/treebanks/joint/dev.conllu corpus/ --converter conllu"
+     - "python3 -m spacy convert assets/treebanks/joint/test.conllu corpus/ --converter conllu"

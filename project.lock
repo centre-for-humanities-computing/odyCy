@@ -1,0 +1,39 @@
+install:
+  cmd: python -m spacy run install
+  script:
+    - pip install -r requirements.txt
+  deps:
+    - path: requirements.txt
+      md5: d41d8cd98f00b204e9800998ecf8427e
+  outs: []
+  spacy_version: 3.4.4
+  spacy_git_version: Unknown
+fetch_assets:
+  cmd: python -m spacy run fetch_assets
+  script:
+    - bash scripts/fetch_treebanks.sh
+    - bash scripts/clean_treebanks.sh
+    - python3 scripts/join_treebanks.py
+  deps: []
+  outs:
+    - path: /assets/treebanks/joint/dev.conllu
+      md5: null
+    - path: /assets/treebanks/joint/test.conllu
+      md5: null
+    - path: /assets/treebanks/joint/train.conllu
+      md5: null
+  spacy_version: 3.4.4
+  spacy_git_version: Unknown
+convert:
+  cmd: python -m spacy run convert
+  script:
+    - python3 -m spacy convert assets/treebanks/joint/train.conllu corpus/ --converter
+      conllu
+    - python3 -m spacy convert assets/treebanks/joint/dev.conllu corpus/ --converter
+      conllu
+    - python3 -m spacy convert assets/treebanks/joint/test.conllu corpus/ --converter
+      conllu
+  deps: []
+  outs: []
+  spacy_version: 3.4.4
+  spacy_git_version: Unknown
