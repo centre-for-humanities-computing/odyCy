@@ -1,5 +1,5 @@
-# assets/
-# corpus/
+assets/
+corpus/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
