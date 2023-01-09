@@ -4,7 +4,7 @@ install:
     - pip install -r requirements.txt
   deps:
     - path: requirements.txt
-      md5: 17e26ae6ef496c079ccb46c5ceac23c1
+      md5: 581832eb99571e40d71cf9d624dc0c61
   outs: []
   spacy_version: 3.4.4
   spacy_git_version: Unknown

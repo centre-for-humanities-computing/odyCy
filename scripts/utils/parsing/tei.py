@@ -38,7 +38,8 @@ def get_id(path: str) -> str:
 class TEIParser(Parser):
     """Parser for TEI files."""
 
-    def parse_file(self, file: str) -> Tuple[Document]:
+    @staticmethod
+    def parse_file(file: str) -> Tuple[Document]:
         """Parses file into a document"""
         tree = etree.parse(file)
         doc: Document = {

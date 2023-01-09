@@ -65,7 +65,8 @@ def get_id(version: etree.Element, book: etree.Element) -> str:
 
 
 class PseudepigraphaParser(Parser):
-    def parse_file(self, file: str) -> Iterable[Document]:
+    @staticmethod
+    def parse_file(file: str) -> Iterable[Document]:
         """Parses the file into an iterable of documents"""
         tree = etree.parse(file)
         # Matches first book element in the parse tree (there's only one)

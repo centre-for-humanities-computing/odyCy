@@ -29,7 +29,7 @@ def join_indices(out_dir: str) -> pd.DataFrame:
 
 def main() -> None:
     print("Parsing pretraining datasets:")
-    for name, pattern in FILE_PATTERNS:
+    for name, pattern in FILE_PATTERNS.items():
         print(f" - {name}")
         parser = PARSERS[name]
         paths = glob.glob(pattern, recursive=True)
@@ -40,3 +40,7 @@ def main() -> None:
     print("Saving.")
     joint_index.to_csv(os.path.join(OUT_DIR, "index.csv"))
     print("DONE")
+
+
+if __name__ == "__main__":
+    main()

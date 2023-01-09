@@ -17,7 +17,8 @@ class Document(TypedDict):
 class Parser(Protocol):
     """Interface for parsers."""
 
-    def parse_file(self, file: str) -> Iterable[Document]:
+    @staticmethod
+    def parse_file(file: str) -> Iterable[Document]:
         """Turns the given file into an iterable of documents."""
         pass
 
