@@ -5,10 +5,10 @@ description: >
 vars:
   config_trf: "transformer"
   lang: "grc"
-  #
-  train_name: "grc_proiel-ud-train"
-  dev_name: "grc_proiel-ud-dev"
-  test_name: "grc_proiel-ud-test"
+  # right now our treebanks are a merger of perseus & proiel treebanks
+  train_name: "grc_treebanks-train"
+  dev_name: "grc_treebanks-dev"
+  test_name: "grc_treebanks-test"
   gpu: 0
   package_version: "0.0.0"
   spacy_version: ">=3.0.0"
