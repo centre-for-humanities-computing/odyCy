@@ -43,6 +43,6 @@ commands:
   - name: convert
     help: "Convert CONLL-U files to spacy binaries."
     script:
-     - "python3 -m spacy convert assets/treebanks/joint/train.conllu corpus/ --converter conllu"
-     - "python3 -m spacy convert assets/treebanks/joint/dev.conllu corpus/ --converter conllu"
-     - "python3 -m spacy convert assets/treebanks/joint/test.conllu corpus/ --converter conllu"
+     - "python3 -m spacy convert assets/treebanks/joint/train.conllu corpus/ --converter conllu -n 10 "
+     - "python3 -m spacy convert assets/treebanks/joint/dev.conllu corpus/ --converter conllu -n 10"
+     - "python3 -m spacy convert assets/treebanks/joint/test.conllu corpus/ --converter conllu -n 10"

@@ -27,12 +27,12 @@ fetch_assets:
 convert:
   cmd: python -m spacy run convert
   script:
-    - python3 -m spacy convert assets/treebanks/joint/train.conllu corpus/ --converter
-      conllu
+    - 'python3 -m spacy convert assets/treebanks/joint/train.conllu corpus/ --converter
+      conllu -n 10 '
     - python3 -m spacy convert assets/treebanks/joint/dev.conllu corpus/ --converter
-      conllu
+      conllu -n 10
     - python3 -m spacy convert assets/treebanks/joint/test.conllu corpus/ --converter
-      conllu
+      conllu -n 10
   deps: []
   outs: []
   spacy_version: 3.4.4
