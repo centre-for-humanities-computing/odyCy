@@ -5,5 +5,5 @@ mkdir -p assets/pretraining/raw/pseudepigrapha/
 cd assets/pretraining/raw/
 cp -rf repos/canonical-greekLit/data/* perseus
 cp -rf repos/First1KGreek/data/* first1k
-cp -rf "repos/Online-Critical-Pseudepigrapha/static/docs/*" pseudepigrapha
+cp -rf repos/Online-Critical-Pseudepigrapha/static/docs/* pseudepigrapha
 rm -rf repos
