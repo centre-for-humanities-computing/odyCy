@@ -11,9 +11,14 @@ vars:
 directories: ["assets", "corpus", "training", "scripts"]
 
 workflows:
+  fetch_assets:
+    - get_pretraining
+    - get_treebanks
   preprocess:
     - install
-    - fetch_assets
+    - get_treebanks
+    - get_pretraining
+    - parse
     - convert
 
 commands:
@@ -23,12 +28,21 @@ commands:
      - "pip install -r requirements.txt"
     deps:
      - "requirements.txt"
-  - name: fetch_assets
+  - name: get_treebanks
     help: "Downloads and cleans treebank data."
     script:
      - "bash scripts/fetch_treebanks.sh"
      - "bash scripts/clean_treebanks.sh"
      - "python3 scripts/join_treebanks.py"
+  - name: get_pretraining
+    help: "Downloads and cleans pretraining data."
+    script:
+     - "bash scripts/fetch_pretraining.sh"
+     - "bash scripts/clean_pretraining.sh"
+  - name: parse
+    help: "Parses pretraining dataset."
+    script:
+      - "python3 scripts/parse_pretraining_corpus.py"
   - name: convert
     help: "Convert CONLL-U files to spacy binaries."
     script:

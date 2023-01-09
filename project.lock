@@ -31,3 +31,12 @@ convert:
   outs: []
   spacy_version: 3.4.4
   spacy_git_version: Unknown
+get_pretraining:
+  cmd: python -m spacy run get_pretraining
+  script:
+    - bash scripts/fetch_pretraining.sh
+    - bash scripts/clean_pretraining.sh
+  deps: []
+  outs: []
+  spacy_version: 3.4.4
+  spacy_git_version: Unknown
