@@ -4,6 +4,7 @@ description: >
 
 vars:
   config_trf: "transformer"
+  config_sm: "cpu"
   lang: "grc"
   model_name: "grc_core_treebanks"
   gpu: 0
@@ -51,11 +52,25 @@ commands:
      - "python3 -m spacy convert assets/treebanks/joint/train.conllu corpus/ --converter conllu -n 10 "
      - "python3 -m spacy convert assets/treebanks/joint/dev.conllu corpus/ --converter conllu -n 10"
      - "python3 -m spacy convert assets/treebanks/joint/test.conllu corpus/ --converter conllu -n 10"
+
   - name: train_cpu
     help: "Trains a CPU model over the dataset"
     script:
-     - "python3 -m spacy train configs/cpu.cfg --output training/${model_name}_sm --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+     - "python3 -m spacy train configs/${vars.config_sm}.cfg --output training/${model_name}_sm --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+    deps:
+      - "corpus/train.spacy"
+      - "corpus/dev.spacy"
+      - "configs/${vars.config_sm}.cfg"
+    outputs:
+      - "training/${model_name}_sm"
+
   - name: train_trf
     help: "Finetunes the Bert based transformer model on the treebanks"
     script:
-     - "python3 -m spacy train configs/transformer.cfg --output training/${model_name}_trf --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+     - "python3 -m spacy train configs/${vars.config_trf}.cfg --output training/${model_name}_trf --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+    deps:
+      - "corpus/train.spacy"
+      - "corpus/dev.spacy"
+      - "configs/${vars.config_trf}.cfg"
+    outputs:
+      - "training/${model_name}_trf"
