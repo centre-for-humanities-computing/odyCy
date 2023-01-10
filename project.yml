@@ -16,10 +16,12 @@ workflows:
   fetch_assets:
     - get_pretraining
     - get_treebanks
+    - get_named_entities
   preprocess:
     - install
     - get_treebanks
     - get_pretraining
+    - get_named_entities
     - parse
     - convert
 
@@ -41,6 +43,12 @@ commands:
     script:
      - "bash scripts/fetch_pretraining.sh"
      - "bash scripts/clean_pretraining.sh"
+  - name: get_named_entities
+    help: "Downloads and cleans named entity assets."
+    script:
+     - "bash scripts/fetch_named_entities.sh"
+     - "bash scripts/clean_named_entities.sh"
+     - "python3 scripts/prepare_named_entities.py"
   - name: parse
     help: "Parses pretraining dataset."
     script:
