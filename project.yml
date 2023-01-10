@@ -24,6 +24,12 @@ workflows:
     - get_pretraining
     - parse
     - convert
+  cpu:
+    - train_cpu
+    - evaluate_cpu
+  transformer:
+    - train_trf
+    - evaluate_trf
 
 commands:
   - name: install
@@ -79,19 +85,22 @@ commands:
   - name: evaluate_cpu
     help: "Evaluate the cpu model on test data & save the metrics"
     script:
-      - "python -m spacy evaluate training/${vars.model_name_sm} corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}.json"
+      - "python -m spacy evaluate training/${vars.model_name_sm}/model-best corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}_model-best.json"
+      - "python -m spacy evaluate training/${vars.model_name_sm}/model-last corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}_model-last.json"
     deps:
       - "training/${vars.model_name_sm}"
       - "corpus/test.spacy"
     outputs:
-      - "metrics/${vars.model_name_sm}_${vars.package_version}.json"
+      - "metrics/${vars.model_name_sm}_${vars.package_version}_model-best.json"
+      - "metrics/${vars.model_name_sm}_${vars.package_version}_model-last.json"
 
   - name: evaluate_trf
     help: "Evaluate the Bert based transformer model on test data & save the metrics"
     script:
-      - "python -m spacy evaluate training/${vars.model_name_trf} corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}.json"
+      - "python -m spacy evaluate training/${vars.model_name_trf}/model-best corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-best.json"
+      - "python -m spacy evaluate training/${vars.model_name_trf}/model-last corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-last.json"
     deps:
-      - "training/${vars.model_name_sm}"
+      - "training/${vars.model_name_trf}"
       - "corpus/test.spacy"
     outputs:
       - "metrics/${vars.model_name_trf}_${vars.package_version}.json"
