@@ -5,7 +5,7 @@ description: >
 vars:
   config_trf: "transformer"
   lang: "grc"
-  model_name: "wearegonnachangethislater"
+  model_name: "grc_core_treebanks"
   gpu: 0
   package_version: "0.0.0"
   spacy_version: ">=3.0.0"
@@ -52,6 +52,10 @@ commands:
      - "python3 -m spacy convert assets/treebanks/joint/dev.conllu corpus/ --converter conllu -n 10"
      - "python3 -m spacy convert assets/treebanks/joint/test.conllu corpus/ --converter conllu -n 10"
   - name: train_cpu
-    help: "Convert CONLL-U files to spacy binaries."
+    help: "Trains a CPU model over the dataset"
     script:
-     - "python3 -m spacy train configs/cpu.cfg --output training/${model_name} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+     - "python3 -m spacy train configs/cpu.cfg --output training/${model_name}_sm --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+  - name: train_trf
+    help: "Finetunes the Bert based transformer model on the treebanks"
+    script:
+     - "python3 -m spacy train configs/transformer.cfg --output training/${model_name}_trf --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
