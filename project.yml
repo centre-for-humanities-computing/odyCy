@@ -82,7 +82,7 @@ commands:
   - name: train_trf
     help: "Finetunes the Bert based transformer model on the treebanks"
     script:
-     - "python3 -m spacy train configs/${vars.config_trf}.cfg --output training/${vars.model_name_trf} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy --gpu-id"
+     - "python3 -m spacy train configs/${vars.config_trf}.cfg --output training/${vars.model_name_trf} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy --gpu-id 0"
     deps:
       - "corpus/train.spacy"
       - "corpus/dev.spacy"
