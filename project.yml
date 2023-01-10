@@ -5,10 +5,7 @@ description: >
 vars:
   config_trf: "transformer"
   lang: "grc"
-  # right now our treebanks are a merger of perseus & proiel treebanks
-  train_name: "grc_treebanks-train"
-  dev_name: "grc_treebanks-dev"
-  test_name: "grc_treebanks-test"
+  model_name: "wearegonnachangethislater"
   gpu: 0
   package_version: "0.0.0"
   spacy_version: ">=3.0.0"
@@ -54,3 +51,7 @@ commands:
      - "python3 -m spacy convert assets/treebanks/joint/train.conllu corpus/ --converter conllu -n 10 "
      - "python3 -m spacy convert assets/treebanks/joint/dev.conllu corpus/ --converter conllu -n 10"
      - "python3 -m spacy convert assets/treebanks/joint/test.conllu corpus/ --converter conllu -n 10"
+  - name: train_cpu
+    help: "Convert CONLL-U files to spacy binaries."
+    script:
+     - "python3 -m spacy train configs/cpu.cfg --output training/${model_name} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
