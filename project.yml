@@ -3,9 +3,11 @@ description: >
   Reproducible workflows for training the ancient greek spaCy pipeline.
 
 vars:
-  config_trf: "transformer"
   lang: "grc"
-  model_name: "grc_core_treebanks"
+  config_trf: "transformer"
+  config_sm: "cpu"
+  model_name_sm: "grc_core_treebanks_sm"
+  model_name_trf: "grc_core_treebanks_trf"
   gpu: 0
   package_version: "0.0.0"
   spacy_version: ">=3.0.0"
@@ -22,6 +24,12 @@ workflows:
     - get_pretraining
     - parse
     - convert
+  cpu:
+    - train_cpu
+    - evaluate_cpu
+  transformer:
+    - train_trf
+    - evaluate_trf
 
 commands:
   - name: install
@@ -51,11 +59,48 @@ commands:
      - "python3 -m spacy convert assets/treebanks/joint/train.conllu corpus/ --converter conllu -n 10 "
      - "python3 -m spacy convert assets/treebanks/joint/dev.conllu corpus/ --converter conllu -n 10"
      - "python3 -m spacy convert assets/treebanks/joint/test.conllu corpus/ --converter conllu -n 10"
+
   - name: train_cpu
     help: "Trains a CPU model over the dataset"
     script:
-     - "python3 -m spacy train configs/cpu.cfg --output training/${model_name}_sm --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+     - "python3 -m spacy train configs/${vars.config_sm}.cfg --output training/${vars.model_name_sm} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+    deps:
+      - "corpus/train.spacy"
+      - "corpus/dev.spacy"
+      - "configs/${vars.config_sm}.cfg"
+    outputs:
+      - "training/${vars.model_name_sm}"
+
   - name: train_trf
     help: "Finetunes the Bert based transformer model on the treebanks"
     script:
-     - "python3 -m spacy train configs/transformer.cfg --output training/${model_name}_trf --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+     - "python3 -m spacy train configs/${vars.config_trf}.cfg --output training/${vars.model_name_trf} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+    deps:
+      - "corpus/train.spacy"
+      - "corpus/dev.spacy"
+      - "configs/${vars.config_trf}.cfg"
+    outputs:
+      - "training/${vars.model_name_trf}"
+
+  - name: evaluate_cpu
+    help: "Evaluate the cpu model on test data & save the metrics"
+    script:
+      - "python -m spacy evaluate training/${vars.model_name_sm}/model-best corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}_model-best.json"
+      - "python -m spacy evaluate training/${vars.model_name_sm}/model-last corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}_model-last.json"
+    deps:
+      - "training/${vars.model_name_sm}"
+      - "corpus/test.spacy"
+    outputs:
+      - "metrics/${vars.model_name_sm}_${vars.package_version}_model-best.json"
+      - "metrics/${vars.model_name_sm}_${vars.package_version}_model-last.json"
+
+  - name: evaluate_trf
+    help: "Evaluate the Bert based transformer model on test data & save the metrics"
+    script:
+      - "python -m spacy evaluate training/${vars.model_name_trf}/model-best corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-best.json"
+      - "python -m spacy evaluate training/${vars.model_name_trf}/model-last corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-last.json"
+    deps:
+      - "training/${vars.model_name_trf}"
+      - "corpus/test.spacy"
+    outputs:
+      - "metrics/${vars.model_name_trf}_${vars.package_version}.json"
