@@ -93,8 +93,8 @@ commands:
   - name: evaluate_cpu
     help: "Evaluate the cpu model on test data & save the metrics"
     script:
-      - "python -m spacy evaluate training/${vars.model_name_sm}/model-best corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}_model-best.json"
-      - "python -m spacy evaluate training/${vars.model_name_sm}/model-last corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}_model-last.json"
+      - "python3 -m spacy evaluate training/${vars.model_name_sm}/model-best corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}_model-best.json"
+      - "python3 -m spacy evaluate training/${vars.model_name_sm}/model-last corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}_model-last.json"
     deps:
       - "training/${vars.model_name_sm}"
       - "corpus/test.spacy"
@@ -105,8 +105,8 @@ commands:
   - name: evaluate_trf
     help: "Evaluate the Bert based transformer model on test data & save the metrics"
     script:
-      - "python -m spacy evaluate training/${vars.model_name_trf}/model-best corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-best.json --gpu-id 0"
-      - "python -m spacy evaluate training/${vars.model_name_trf}/model-last corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-last.json --gpu-id 0"
+      - "python3 -m spacy evaluate training/${vars.model_name_trf}/model-best corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-best.json --gpu-id 0"
+      - "python3 -m spacy evaluate training/${vars.model_name_trf}/model-last corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-last.json --gpu-id 0"
     deps:
       - "training/${vars.model_name_trf}"
       - "corpus/test.spacy"
