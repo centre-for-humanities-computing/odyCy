@@ -82,7 +82,7 @@ commands:
   - name: train_trf
     help: "Finetunes the Bert based transformer model on the treebanks"
     script:
-     - "python3 -m spacy train configs/${vars.config_trf}.cfg --output training/${vars.model_name_trf} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+     - "python3 -m spacy train configs/${vars.config_trf}.cfg --output training/${vars.model_name_trf} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy --gpu-id"
     deps:
       - "corpus/train.spacy"
       - "corpus/dev.spacy"
@@ -105,8 +105,8 @@ commands:
   - name: evaluate_trf
     help: "Evaluate the Bert based transformer model on test data & save the metrics"
     script:
-      - "python -m spacy evaluate training/${vars.model_name_trf}/model-best corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-best.json"
-      - "python -m spacy evaluate training/${vars.model_name_trf}/model-last corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-last.json"
+      - "python -m spacy evaluate training/${vars.model_name_trf}/model-best corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-best.json --gpu-id 0"
+      - "python -m spacy evaluate training/${vars.model_name_trf}/model-last corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-last.json --gpu-id 0"
     deps:
       - "training/${vars.model_name_trf}"
       - "corpus/test.spacy"
