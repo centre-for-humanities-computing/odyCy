@@ -1,5 +1,6 @@
-lxml==4.9.2
-pandas==1.5.1
+lxml>=4.9.2, <4.10.0
+pandas>=1.5.1, <1.6.0
+spacy-huggingface-hub>=0.0.8, <0.1.0
 spacy[cuda101]>=3.4.0, <3.5.0
 spacy-transformers==1.1.9
 torch==1.8.1+cu101

@@ -8,6 +8,7 @@ __pycache__/
 *$py.class
 .python-version
 metrics/
+packages/
 
 # C extensions
 *.so

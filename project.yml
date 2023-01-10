@@ -6,8 +6,10 @@ vars:
   lang: "grc"
   config_trf: "transformer"
   config_sm: "cpu"
-  model_name_sm: "grc_core_treebanks_sm"
-  model_name_trf: "grc_core_treebanks_trf"
+  model_name_sm: "grc_homercy_treebanks_sm"
+  model_name_trf: "grc_homercy_treebanks_trf"
+  package_name_sm: "homercy_treebanks_sm"
+  package_name_trf: "homercy_treebanks_trf"
   gpu: 0
   package_version: "0.0.0"
   spacy_version: ">=3.0.0"
@@ -37,6 +39,7 @@ commands:
   - name: install
     help: "Install dependencies."
     script:
+     - "huggingface-cli login"
      - "pip install -r requirements.txt"
     deps:
      - "requirements.txt"
@@ -116,4 +119,13 @@ commands:
     help: "Packages Transformer model into a Python wheel"
     script:
      - "mkdir -p packages"
-     - "python3 -m spacy package training/${vars.model_name_trf}/model-best packages/${vars.model_name_trf}"
+     - "python3 -m spacy package training/${vars.model_name_trf}/model-best packages/ --build wheel --name ${vars.package_name_sm}"
+  - name: package_cpu
+    help: "Packages small model into a Python wheel"
+    script:
+     - "mkdir -p packages"
+     - "python3 -m spacy package training/${vars.model_name_sm}/model-best packages/ --build wheel --name ${vars.package_name_trf}"
+  - name: "push_trf"
+    help: "Pushes transformer model to Huggingface repository"
+    script:
+     - "python3 -m spacy huggingface-hub push packages/{vars.lang}_{vars.model_name_trf}-{vars.package_version}/dist/{vars.lang}_{vars.model_name_trf}-{vars.package_version}-py3-none-any.whl"
