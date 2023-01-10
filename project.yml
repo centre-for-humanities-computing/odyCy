@@ -112,3 +112,8 @@ commands:
       - "corpus/test.spacy"
     outputs:
       - "metrics/${vars.model_name_trf}_${vars.package_version}.json"
+  - name: package_trf
+    help: "Packages Transformer model into a Python wheel"
+    script:
+     - "mkdir -p packages"
+     - "python3 -m spacy package training/${vars.model_name_trf}/model-best packages/${vars.model_name_trf}"
