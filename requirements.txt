@@ -1,2 +1,5 @@
 lxml==4.9.2
 pandas==1.5.1
+spacy[cuda101]>=3.4.0, <3.5.0
+spacy-transformers==1.1.9
+torch==1.8.1+cu101
