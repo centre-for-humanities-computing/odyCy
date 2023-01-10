@@ -39,6 +39,7 @@ commands:
   - name: install
     help: "Install dependencies."
     script:
+     - "wandb login"
      - "huggingface-cli login"
      - "pip install -r requirements.txt"
     deps:

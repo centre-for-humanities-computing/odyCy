@@ -1,6 +1,7 @@
 assets/
 corpus/
 training/
+wandb/
 project.lock
 # Byte-compiled / optimized / DLL files
 __pycache__/
