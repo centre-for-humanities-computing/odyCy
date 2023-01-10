@@ -57,41 +57,41 @@ commands:
   - name: train_cpu
     help: "Trains a CPU model over the dataset"
     script:
-     - "python3 -m spacy train configs/${vars.config_sm}.cfg --output training/${model_name_sm} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+     - "python3 -m spacy train configs/${vars.config_sm}.cfg --output training/${vars.model_name_sm} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
     deps:
       - "corpus/train.spacy"
       - "corpus/dev.spacy"
       - "configs/${vars.config_sm}.cfg"
     outputs:
-      - "training/${model_name_sm}"
+      - "training/${vars.model_name_sm}"
 
   - name: train_trf
     help: "Finetunes the Bert based transformer model on the treebanks"
     script:
-     - "python3 -m spacy train configs/${vars.config_trf}.cfg --output training/${model_name_trf} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
+     - "python3 -m spacy train configs/${vars.config_trf}.cfg --output training/${vars.model_name_trf} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
     deps:
       - "corpus/train.spacy"
       - "corpus/dev.spacy"
       - "configs/${vars.config_trf}.cfg"
     outputs:
-      - "training/${model_name_trf}"
+      - "training/${vars.model_name_trf}"
 
   - name: evaluate_cpu
     help: "Evaluate the cpu model on test data & save the metrics"
     script:
-      - "python -m spacy evaluate training/${model_name_sm} corpus/test.spacy --output metrics/${model_name_sm}_${vars.package_version}.json"
+      - "python -m spacy evaluate training/${vars.model_name_sm} corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}.json"
     deps:
-      - "training/${model_name_sm}"
+      - "training/${vars.model_name_sm}"
       - "corpus/test.spacy"
     outputs:
-      - "metrics/${model_name_sm}_${vars.package_version}.json"
+      - "metrics/${vars.model_name_sm}_${vars.package_version}.json"
 
   - name: evaluate_trf
     help: "Evaluate the Bert based transformer model on test data & save the metrics"
     script:
-      - "python -m spacy evaluate training/${model_name_trf} corpus/test.spacy --output metrics/${model_name_trf}_${vars.package_version}.json"
+      - "python -m spacy evaluate training/${vars.model_name_trf} corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}.json"
     deps:
-      - "training/${model_name_sm}"
+      - "training/${vars.model_name_sm}"
       - "corpus/test.spacy"
     outputs:
-      - "metrics/${model_name_trf}_${vars.package_version}.json"
+      - "metrics/${vars.model_name_trf}_${vars.package_version}.json"
