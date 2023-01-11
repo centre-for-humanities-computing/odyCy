@@ -1,6 +1,6 @@
 # Assigning command line arguments to variables
-MODEL_NAME = $1
-PACKAGE_VERSION = $2
+MODEL_NAME=$1
+PACKAGE_VERSION=$2
 
 source environments/training/bin/activate
 for CORPUS in "joint" "perseus" "proiel"
