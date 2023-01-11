@@ -73,24 +73,13 @@ commands:
   - name: train_sm
     help: "Trains a sm model over the dataset"
     script:
-      - "bash scripts/training.sh ${vars.config_sm} ${vars.model_name_sm} ${vars.corpus}"
-    deps:
-      - "corpus/train.spacy"
-      - "corpus/dev.spacy"
-      - "configs/${vars.config_sm}.cfg"
-    outputs:
-      - "training/${vars.model_name_sm}"
+      - "bash scripts/training.sh ${vars.config_sm} ${vars.model_name_sm} ${vars.training_corpus}"
 
   - name: train_trf
     help: "Finetunes the Bert based transformer model on the treebanks"
     script:
-      - "bash scripts/training.sh ${vars.config_trf} ${vars.model_name_trf} ${vars.corpus}"
-    deps:
-      - "corpus/train.spacy"
-      - "corpus/dev.spacy"
-      - "configs/${vars.config_trf}.cfg"
-    outputs:
-      - "training/${vars.model_name_trf}"
+      - "bash scripts/training.sh ${vars.config_trf} ${vars.model_name_trf} ${vars.training_corpus}"
+
   # Evaluation scripts 
   - name: evaluate_sm
     help: "Evaluate the sm model on test data & save the metrics"
