@@ -10,6 +10,7 @@ vars:
   model_name_trf: "grc_homercy_treebanks_trf"
   package_name_sm: "homercy_treebanks_sm"
   package_name_trf: "homercy_treebanks_trf"
+  training_corpus: "joint"
   gpu: 0
   package_version: "0.0.0"
   spacy_version: ">=3.4.0"
@@ -17,17 +18,10 @@ vars:
 directories: ["assets", "corpus", "training", "scripts"]
 
 workflows:
-  fetch_assets:
-    - get_pretraining
-    - get_treebanks
-    - get_named_entities
   preprocess:
     - install
-    - get_treebanks
-    - get_pretraining
-    - get_named_entities
-    - parse
-    - convert
+    - fetch_assets
+    - prepare
   train_evaluate_sm:
     - train_sm
     - evaluate_sm
@@ -40,24 +34,18 @@ workflows:
   package_push_trf:
     - package_trf
     - push_trf
-  sm_all:
+  all_sm:
     - install
-    - get_treebanks
-    - get_pretraining
-    - get_named_entities
-    - parse
-    - convert
+    - fetch_assets
+    - prepare
     - train_sm
     - evaluate_sm
     - package_sm
     - push_sm
-  trf_all:
+  all_trf:
     - install
-    - get_treebanks
-    - get_pretraining
-    - get_named_entities
-    - parse
-    - convert
+    - fetch_assets
+    - prepare
     - train_trf
     - evaluate_trf
     - package_trf
@@ -74,55 +62,26 @@ commands:
       - "requirements_training.txt"
       - "requirements_packaging.txt"
   # Fetching assets
-  - name: get_treebanks
-    help: "Downloads and cleans treebank data."
+  - name: fetch_assets
+    help: Fetches treebanks, pretraining corpus and named entity assets.
     script:
-      - "source environments/preprocessing/bin/activate"
       - "bash scripts/fetch_treebanks.sh"
       - "bash scripts/clean_treebanks.sh"
-      - "python3 scripts/join_treebanks.py"
-      - "deactivate"
-
-  - name: get_pretraining
-    help: "Downloads and cleans pretraining data."
-    script:
-      - "source environments/preprocessing/bin/activate"
       - "bash scripts/fetch_pretraining.sh"
       - "bash scripts/clean_pretraining.sh"
-      - "deactivate"
-
-  - name: get_named_entities
-    help: "Downloads and cleans named entity assets."
-    script:
-      - "source environments/preprocessing/bin/activate"
       - "bash scripts/fetch_named_entities.sh"
       - "bash scripts/clean_named_entities.sh"
-      - "python3 scripts/prepare_named_entities.py"
-      - "deactivate"
   # Preprocessing assets for training
-  - name: parse
-    help: "Parses pretraining dataset."
+  - name: prepare
+    help: "Prepares assets for training"
     script:
-      - "source environments/preprocessing/bin/activate"
-      - "python3 scripts/parse_pretraining_corpus.py"
-      - "deactivate"
+      - "bash scripts/prepare.sh"
 
-  - name: convert
-    help: "Convert CONLL-U files to spacy binaries."
-    script:
-      - "source environments/preprocessing/bin/activate"
-      - "python3 -m spacy convert assets/treebanks/joint/train.conllu corpus/ --converter conllu -n 10 "
-      - "python3 -m spacy convert assets/treebanks/joint/dev.conllu corpus/ --converter conllu -n 10"
-      - "python3 -m spacy convert assets/treebanks/joint/test.conllu corpus/ --converter conllu -n 10"
-      - "deactivate"
   # Training scripts
   - name: train_sm
     help: "Trains a sm model over the dataset"
     script:
-      - "source environments/training/bin/activate"
-      - "wandb login"
-      - "python3 -m spacy train configs/${vars.config_sm}.cfg --output training/${vars.model_name_sm} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy"
-      - "deactivate"
+      - "bash scripts/training.sh ${vars.config_sm} ${vars.model_name_sm} ${vars.corpus}"
     deps:
       - "corpus/train.spacy"
       - "corpus/dev.spacy"
@@ -133,10 +92,7 @@ commands:
   - name: train_trf
     help: "Finetunes the Bert based transformer model on the treebanks"
     script:
-      - "source environments/training/bin/activate"
-      - "wandb login"
-      - "python3 -m spacy train configs/${vars.config_trf}.cfg --output training/${vars.model_name_trf} --paths.train corpus/train.spacy --paths.dev corpus/dev.spacy --gpu-id 0"
-      - "deactivate"
+      - "bash scripts/training.sh ${vars.config_trf} ${vars.model_name_trf} ${vars.corpus}"
     deps:
       - "corpus/train.spacy"
       - "corpus/dev.spacy"
@@ -147,7 +103,7 @@ commands:
   - name: evaluate_sm
     help: "Evaluate the sm model on test data & save the metrics"
     script:
-      - "source environments/training/bin/activate"
+      - ". environments/training/bin/activate"
       - "python3 -m spacy evaluate training/${vars.model_name_sm}/model-best corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}_model-best.json"
       - "python3 -m spacy evaluate training/${vars.model_name_sm}/model-last corpus/test.spacy --output metrics/${vars.model_name_sm}_${vars.package_version}_model-last.json"
       - "deactivate"
@@ -161,7 +117,7 @@ commands:
   - name: evaluate_trf
     help: "Evaluate the Bert based transformer model on test data & save the metrics"
     script:
-      - "source environments/training/bin/activate"
+      - ". environments/training/bin/activate"
       - "python3 -m spacy evaluate training/${vars.model_name_trf}/model-best corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-best.json --gpu-id 0"
       - "python3 -m spacy evaluate training/${vars.model_name_trf}/model-last corpus/test.spacy --output metrics/${vars.model_name_trf}_${vars.package_version}_model-last.json --gpu-id 0"
       - "deactivate"
@@ -174,7 +130,7 @@ commands:
   - name: package_trf
     help: "Packages Transformer model into a Python wheel"
     script:
-      - "source environments/packaging/bin/activate"
+      - ". environments/packaging/bin/activate"
       - "mkdir -p packages"
       - "python3 -m spacy package training/${vars.model_name_trf}/model-best packages/ --build wheel --name ${vars.package_name_trf}"
       - "deactivate"
@@ -182,7 +138,7 @@ commands:
   - name: package_sm
     help: "Packages small model into a Python wheel"
     script:
-      - "source environments/packaging/bin/activate"
+      - ". environments/packaging/bin/activate"
       - "mkdir -p packages"
       - "python3 -m spacy package training/${vars.model_name_sm}/model-best packages/ --build wheel --name ${vars.package_name_sm}"
       - "deactivate"
@@ -190,7 +146,7 @@ commands:
   - name: "push_trf"
     help: "Pushes transformer model to Huggingface repository"
     script:
-      - "source environments/packaging/bin/activate"
+      - ". environments/packaging/bin/activate"
       - "huggingface-cli login"
       - "python3 -m spacy huggingface-hub push packages/${vars.lang}_${vars.package_name_trf}-${vars.package_version}/dist/${vars.lang}_${vars.package_name_trf}-${vars.package_version}-py3-none-any.whl"
       - "deactivate"
@@ -198,7 +154,7 @@ commands:
   - name: "push_sm"
     help: "Pushes transformer model to Huggingface repository"
     script:
-      - "source environments/packaging/bin/activate"
+      - ". environments/packaging/bin/activate"
       - "huggingface-cli login"
       - "python3 -m spacy huggingface-hub push packages/${vars.lang}_${vars.package_name_sm}-${vars.package_version}/dist/${vars.lang}_${vars.package_name_sm}-${vars.package_version}-py3-none-any.whl"
       - "deactivate"
