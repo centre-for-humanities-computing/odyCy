@@ -120,13 +120,17 @@ commands:
     help: "Packages Transformer model into a Python wheel"
     script:
      - "mkdir -p packages"
-     - "python3 -m spacy package training/${vars.model_name_trf}/model-best packages/ --build wheel --name ${vars.package_name_sm}"
+     - "python3 -m spacy package training/${vars.model_name_trf}/model-best packages/ --build wheel --name ${vars.package_name_trf}"
   - name: package_cpu
     help: "Packages small model into a Python wheel"
     script:
      - "mkdir -p packages"
-     - "python3 -m spacy package training/${vars.model_name_sm}/model-best packages/ --build wheel --name ${vars.package_name_trf}"
+     - "python3 -m spacy package training/${vars.model_name_sm}/model-best packages/ --build wheel --name ${vars.package_name_sm}"
   - name: "push_trf"
     help: "Pushes transformer model to Huggingface repository"
     script:
-     - "python3 -m spacy huggingface-hub push packages/{vars.lang}_{vars.model_name_trf}-{vars.package_version}/dist/{vars.lang}_{vars.model_name_trf}-{vars.package_version}-py3-none-any.whl"
+     - "python3 -m spacy huggingface-hub push packages/${vars.lang}_${vars.package_name_trf}-${vars.package_version}/dist/${vars.lang}_${vars.package_name_trf}-${vars.package_version}-py3-none-any.whl"
+  - name: "push_cpu"
+    help: "Pushes transformer model to Huggingface repository"
+    script:
+     - "python3 -m spacy huggingface-hub push packages/${vars.lang}_${vars.package_name_sm}-${vars.package_version}/dist/${vars.lang}_${vars.package_name_sm}-${vars.package_version}-py3-none-any.whl"
