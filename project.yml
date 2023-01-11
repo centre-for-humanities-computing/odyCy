@@ -65,12 +65,12 @@ commands:
   - name: fetch_assets
     help: Fetches treebanks, pretraining corpus and named entity assets.
     script:
-      - "bash scripts/fetch_treebanks.sh"
-      - "bash scripts/clean_treebanks.sh"
-      - "bash scripts/fetch_pretraining.sh"
-      - "bash scripts/clean_pretraining.sh"
-      - "bash scripts/fetch_named_entities.sh"
-      - "bash scripts/clean_named_entities.sh"
+      - "bash scripts/fetch/fetch_treebanks.sh"
+      - "bash scripts/clean/clean_treebanks.sh"
+      - "bash scripts/fetch/fetch_pretraining.sh"
+      - "bash scripts/clean/clean_pretraining.sh"
+      - "bash scripts/fetch/fetch_named_entities.sh"
+      - "bash scripts/clean/clean_named_entities.sh"
   # Preprocessing assets for training
   - name: prepare
     help: "Prepares assets for training"
