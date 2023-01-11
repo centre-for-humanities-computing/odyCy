@@ -1,7 +1,7 @@
-MODEL_NAME = $1
-PACKAGE_NAME = $2
-PACKAGE_VERSION = $3
-LANG = $4
+MODEL_NAME=$1
+PACKAGE_NAME=$2
+PACKAGE_VERSION=$3
+LANG=$4
 
 source environments/packaging/bin/activate
 
