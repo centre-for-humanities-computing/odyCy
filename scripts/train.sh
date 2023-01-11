@@ -2,7 +2,23 @@
 CONFIG=$1
 MODEL_NAME=$2
 CORPUS=$3
+DEVICE=$4
 
 source environments/training/bin/activate
 wandb login
-python3 -m spacy train configs/$CONFIG.cfg --output training/$MODEL_NAME --paths.train corpus/$CORPUS/train.spacy --paths.dev corpus/$CORPUS/dev.spacy --gpu-id 0
+
+args=()
+args+=( "configs/$CONFIG.cfg" )
+args+=( "--output" ) 
+args+=( "training/$MODEL_NAME" ) 
+args+=( "--paths.train" ) 
+args+=( "corpus/$CORPUS/train.spacy" ) 
+args+=( "--paths.dev" ) 
+args+=( "corpus/$CORPUS/dev.spacy" ) 
+if [ $DEVICE == "gpu" ]
+then
+    args+=( "--gpu-id" )
+    args+=( "0" )
+fi
+
+python3 -m spacy train "${args[@]}"

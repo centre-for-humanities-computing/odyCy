@@ -1,5 +1,3 @@
 numpy>=1.17.0, <1.24.0
 wandb>=0.13.7, <0.14
-spacy[cuda101]>=3.4.0, <3.5.0
-spacy-transformers>=1.1.7, <1.2.0
-torch==1.8.1+cu101
+spacy>=3.4.0, <3.5.0

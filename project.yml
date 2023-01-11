@@ -73,12 +73,12 @@ commands:
   - name: train_sm
     help: "Trains a sm model over the dataset"
     script:
-      - "bash scripts/train.sh ${vars.config_sm} ${vars.model_name_sm} ${vars.training_corpus}"
+      - "bash scripts/train.sh ${vars.config_sm} ${vars.model_name_sm} ${vars.training_corpus} cpu"
 
   - name: train_trf
     help: "Finetunes the Bert based transformer model on the treebanks"
     script:
-      - "bash scripts/train.sh ${vars.config_trf} ${vars.model_name_trf} ${vars.training_corpus}"
+      - "bash scripts/train.sh ${vars.config_trf} ${vars.model_name_trf} ${vars.training_corpus} gpu"
 
   # Evaluation scripts 
   - name: evaluate_sm
