@@ -1,7 +1,7 @@
 lxml>=4.9.2, <4.10.0
-numpy>=1.17.0, <1.24.0
+numpy>=1.17.0, <1.22.0
 pandas>=1.5.1, <1.6.0
-spacy-huggingface-hub>=0.0.8, <0.1.0
+huggingface-hub<1.0,>=0.10.0
 wandb>=0.13.7, <0.14
 spacy[cuda101]>=3.4.0, <3.5.0
 spacy-transformers>=1.1.7, <1.2.0
