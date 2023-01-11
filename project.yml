@@ -28,12 +28,28 @@ workflows:
     - get_named_entities
     - parse
     - convert
-  cpu:
+  cpu_all:
+    - install
+    - get_treebanks
+    - get_pretraining
+    - get_named_entities
+    - parse
+    - convert
     - train_cpu
     - evaluate_cpu
-  transformer:
+    - package_cpu
+    - push_cpu
+  trf_all:
+    - install
+    - get_treebanks
+    - get_pretraining
+    - get_named_entities
+    - parse
+    - convert
     - train_trf
     - evaluate_trf
+    - package_trf
+    - push_trf
 
 commands:
   - name: install
