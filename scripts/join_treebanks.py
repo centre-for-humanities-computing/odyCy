@@ -1,5 +1,4 @@
 from typing import Literal, List, Iterable
-import glob
 
 Purpose = Literal["dev", "test", "train"]
 
@@ -8,7 +7,10 @@ PURPOSES: List[Purpose] = ["dev", "test", "train"]
 
 def get_conllu_paths(purpose: Purpose) -> List[str]:
     """Returns all conllu files for the given purpose."""
-    return glob.glob(f"assets/treebanks/*/grc_*{purpose}.conllu")
+    return [
+        f"assets/treebanks/proiel/{purpose}.conllu",
+        f"assets/treebanks/perseus/{purpose}.conllu",
+    ]
 
 
 def stream_files(paths: Iterable[str]) -> Iterable[str]:

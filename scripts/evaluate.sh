@@ -11,4 +11,3 @@ do
         python3 -m spacy evaluate "training/$MODEL_NAME/model-$WHICH" corpus/$CORPUS/test.spacy --output "metrics/$MODEL_NAME/$PACKAGE_VERSION/$CORPUS/$WHICH.json"
     done
 done
-deactivate

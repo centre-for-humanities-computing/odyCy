@@ -14,5 +14,3 @@ python3 -m spacy package "training/$MODEL_NAME/model-best packages/" --build whe
 
 # Pushing to Huggingface
 python3 -m spacy huggingface-hub push "packages/${LANG}_${PACKAGE_NAME}-${PACKAGE_VERSION}/dist/${LANG}_${PACKAGE_NAME}-${PACKAGE_VERSION}-py3-none-any.whl"
-
-deactivate

@@ -24,4 +24,3 @@ do
         python3 -m spacy convert assets/treebanks/$CORPUS/$SET.conllu corpus/$CORPUS/ --converter conllu -n 10 
     done
 done
-deactivate
