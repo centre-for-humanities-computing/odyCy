@@ -7,5 +7,5 @@ echo "Using $VIRTUAL_ENV"
 for CORPUS in "joint" "perseus" "proiel"
 do
     mkdir -p "metrics/$MODEL_NAME/$PACKAGE_VERSION/$CORPUS"
-    spacy evaluate "$MODEL_NAME" corpus/$CORPUS/test.spacy --output "metrics/$MODEL_NAME/$PACKAGE_VERSION/$CORPUS/hub_version.json"
+    spacy evaluate "$MODEL_NAME" corpus/$CORPUS/test.spacy --output "metrics/$MODEL_NAME/$PACKAGE_VERSION/$CORPUS/hub_version.json" --gpu-id 0
 done
