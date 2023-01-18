@@ -1,5 +1,5 @@
 # Sourcing preprocessing env
-source environments/preprocessing/activate
+source environments/preprocessing/bin/activate
 # Renaming perseus and proiel treebank files
 # Perseus
 mv assets/treebanks/perseus/grc_perseus-ud-dev.conllu assets/treebanks/perseus/dev.conllu
