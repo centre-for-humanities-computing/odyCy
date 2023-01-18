@@ -42,6 +42,9 @@ workflows:
     - train_trf
     - evaluate_trf
     - push_trf
+  hub_models:
+    - get_model_checkpoints
+    - evaluate_hub
 
 commands:
   # Installation
@@ -53,6 +56,7 @@ commands:
       - "requirements_preprocessing.txt"
       - "requirements_training.txt"
       - "requirements_packaging.txt"
+
   # Fetching assets
   - name: fetch_assets
     help: Fetches treebanks, pretraining corpus and named entity assets.
@@ -63,6 +67,13 @@ commands:
       - "bash scripts/clean/clean_pretraining.sh"
       - "bash scripts/fetch/fetch_named_entities.sh"
       - "bash scripts/clean/clean_named_entities.sh"
+
+    # donwload models we've already trained
+  - name: get_model_checkpoints
+    help: Downloads pretrained HomerCy models from huggingface hub
+    script:
+      - "bash scripts/get_model_checkpoints.sh"
+
   # Preprocessing assets for training
   - name: prepare
     help: "Prepares assets for training"
@@ -90,6 +101,12 @@ commands:
     help: "Evaluate the Bert based transformer model on test data & save the metrics"
     script:
       - "bash scripts/evaluate.sh ${vars.model_name_trf} ${vars.package_version}"
+
+  - name: evaluate_hub
+    help: "Evaluate all HomerCy models that are on the Huggingface Hub"
+    script:
+      - "bash scripts/evaluate_checkpoints.sh ${vars.model_name_sm} ${vars.package_version}"
+      - "bash scripts/evaluate_checkpoints.sh ${vars.model_name_trf} ${vars.package_version}"
 
   # Packaging and pushing to online repositories
   - name: push_sm
