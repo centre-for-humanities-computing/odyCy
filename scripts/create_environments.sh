@@ -4,6 +4,7 @@ rm -rf environments/
 mkdir -p environments
 for ENVIRONMENT in "preprocessing" "training" "packaging"
 do
+    echo "Installing VENV: $ENVIRONMENT"
     python3 -m venv environments/$ENVIRONMENT
     source environments/$ENVIRONMENT/bin/activate
     pip install -r "requirements_$ENVIRONMENT.txt"
