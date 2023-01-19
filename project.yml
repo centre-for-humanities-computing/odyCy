@@ -12,7 +12,7 @@ vars:
   package_name_trf: "homercy_treebanks_trf"
   training_corpus: "joint"
   gpu: 0
-  package_version: "0.0.0"
+  package_version: "0.0.1"
   spacy_version: ">=3.4.0"
 
 directories: ["assets", "corpus", "training", "scripts"]
