@@ -15,6 +15,9 @@ packages/
 # C extensions
 *.so
 
+# Marton's stupid Python files
+mess_around.*
+
 # Distribution / packaging
 .Python
 build/
