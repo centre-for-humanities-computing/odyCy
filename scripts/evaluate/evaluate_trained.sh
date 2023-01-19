@@ -8,6 +8,6 @@ do
     mkdir -p "metrics/$MODEL_NAME/$PACKAGE_VERSION/$CORPUS"
     for WHICH in "best" "last"
     do
-        python3 -m spacy evaluate "training/$MODEL_NAME/model-$WHICH" corpus/$CORPUS/test.spacy --output "metrics/$MODEL_NAME/$PACKAGE_VERSION/$CORPUS/$WHICH.json"
+        python3 -m spacy evaluate "training/$MODEL_NAME/model-$WHICH" corpus/$CORPUS/test.spacy --output "metrics/$MODEL_NAME/$PACKAGE_VERSION/$CORPUS/$WHICH.json" --code "custom_components/lemmatizer.py"
     done
 done
