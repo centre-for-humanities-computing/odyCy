@@ -4,3 +4,4 @@ spacy>=3.4.0, <3.5.0
 spacy-transformers>=1.1.7, <1.2.0
 torch==1.8.1
 pytest>=7.2.0, <8.0.0
+pandas
