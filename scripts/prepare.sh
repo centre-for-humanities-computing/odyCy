@@ -24,3 +24,5 @@ do
         python3 -m spacy convert assets/treebanks/$CORPUS/$SET.conllu corpus/$CORPUS/ --converter conllu -n 10 
     done
 done
+# Creating lemma table
+python3 scripts/prepare_lemma_table.py
