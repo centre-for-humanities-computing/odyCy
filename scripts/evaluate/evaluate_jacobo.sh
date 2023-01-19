@@ -1,23 +1,47 @@
+###
+### jacobo proiel
+###
+
+MODEL1="grc_ud_proiel_trf"
+
 # create a new venv
-python3 -m venv environments/eval_jacobo
-source environments/eval_jacobo/bin/activate
-
-# fetch jacobo's models
-# clean existing instalation
-pip uninstall grc_ud_proiel_trf -y
-pip uninstall grc_ud_perseus_trf -y
-
-# install models
-pip install https://huggingface.co/Jacobo/grc_ud_proiel_trf/resolve/main/grc_ud_proiel_trf-any-py3-none-any.whl
-pip install https://huggingface.co/Jacobo/grc_ud_perseus_trf/resolve/main/grc_ud_perseus_trf-any-py3-none-any.whl
-
-# eval
+python3 -m venv environments/$MODEL1
+source environments/$MODEL1/bin/activate
 echo "Using $VIRTUAL_ENV"
-for MODEL_NAME in "grc_ud_proiel_trf" "grc_ud_perseus_trf"
+
+# fetch model
+pip uninstall $MODEL1 -y
+pip install "https://huggingface.co/Jacobo/$MODEL1/resolve/main/$MODEL1-any-py3-none-any.whl"
+
+# eval proiel
+for CORPUS in "joint" "perseus" "proiel"
     do
-    for CORPUS in "joint" "perseus" "proiel"
-    do
-        mkdir -p "metrics/$MODEL_NAME/1.0.0/$CORPUS"
-        spacy evaluate "$MODEL_NAME" corpus/$CORPUS/test.spacy --output "metrics/$MODEL_NAME/1.0.0/$CORPUS/hub_version.json" --gpu-id 0
-    done
+    mkdir -p "metrics/$MODEL1/1.0.0/$CORPUS"
+    spacy evaluate "$MODEL1" corpus/$CORPUS/test.spacy --output "metrics/$MODEL1/1.0.0/$CORPUS/hub_version.json"
 done
+
+deactivate
+
+###
+### jacobo perseus
+###
+
+MODEL2="grc_ud_perseus_trf"
+
+# create a new venv
+python3 -m venv environments/$MODEL2
+source environments/$MODEL2/bin/activate
+echo "Using $VIRTUAL_ENV"
+
+# fetch model
+pip uninstall $MODEL2 -y
+pip install "https://huggingface.co/Jacobo/$MODEL2/resolve/main/$MODEL2-any-py3-none-any.whl"
+
+# eval perseus
+for CORPUS in "joint" "perseus" "proiel"
+    do
+    mkdir -p "metrics/$MODEL2/1.0.0/$CORPUS"
+    spacy evaluate "$MODEL2" corpus/$CORPUS/test.spacy --output "metrics/$MODEL2/1.0.0/$CORPUS/hub_version.json"
+done
+
+deactivate
