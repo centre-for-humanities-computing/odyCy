@@ -15,6 +15,8 @@ args+=( "--paths.train" )
 args+=( "corpus/$CORPUS/train.spacy" ) 
 args+=( "--paths.dev" ) 
 args+=( "corpus/$CORPUS/dev.spacy" ) 
+args+=( "--code" ) 
+args+=( "custom_components/lemmatizer.py" ) 
 if [ $DEVICE == "gpu" ]
 then
     args+=( "--gpu-id" )
