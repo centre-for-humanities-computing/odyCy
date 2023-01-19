@@ -3,6 +3,7 @@ corpus/
 training/
 environments/
 wandb/
+metrics/
 project.lock
 # Byte-compiled / optimized / DLL files
 __pycache__/
