@@ -9,7 +9,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 .python-version
-metrics/
 packages/
 mess_around.*
 

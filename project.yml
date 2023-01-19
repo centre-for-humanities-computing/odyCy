@@ -45,6 +45,7 @@ workflows:
   hub_models:
     - get_model_checkpoints
     - evaluate_hub
+    - evaluate_jacobo
 
 commands:
   # Installation
@@ -96,18 +97,23 @@ commands:
   - name: evaluate_sm
     help: "Evaluate the sm model on test data & save the metrics"
     script:
-      - "bash scripts/evaluate.sh ${vars.model_name_sm} ${vars.package_version}"
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.model_name_sm} ${vars.package_version}"
 
   - name: evaluate_trf
     help: "Evaluate the Bert based transformer model on test data & save the metrics"
     script:
-      - "bash scripts/evaluate.sh ${vars.model_name_trf} ${vars.package_version}"
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.model_name_trf} ${vars.package_version}"
 
   - name: evaluate_hub
     help: "Evaluate all HomerCy models that are on the Huggingface Hub"
     script:
-      - "bash scripts/evaluate_checkpoints.sh ${vars.model_name_sm} ${vars.package_version}"
-      - "bash scripts/evaluate_checkpoints.sh ${vars.model_name_trf} ${vars.package_version}"
+      - "bash scripts/evaluate_homercy_checkpoints.sh ${vars.model_name_sm} ${vars.package_version}"
+      - "bash scripts/evaluate_homercy_checkpoints.sh ${vars.model_name_trf} ${vars.package_version}"
+
+  - name: evaluate_jacobo
+    help: "Evaluate grc spacy models by others"
+    script:
+      - "bash scripts/evaluate/evaluate_jacobo.sh"
 
   # Packaging and pushing to online repositories
   - name: push_sm
