@@ -11,7 +11,6 @@ __pycache__/
 *$py.class
 .python-version
 packages/
-mess_around.*
 
 # C extensions
 *.so
