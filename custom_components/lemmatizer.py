@@ -1,4 +1,5 @@
-from typing import Optional, List, TypedDict, Literal, Dict
+from typing import Optional, List, Literal, Dict
+from typing_extensions import TypedDict
 
 import pandas as pd
 
