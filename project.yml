@@ -67,6 +67,7 @@ commands:
       - "bash scripts/clean/clean_pretraining.sh"
       - "bash scripts/fetch/fetch_named_entities.sh"
       - "bash scripts/clean/clean_named_entities.sh"
+      - "bash scripts/fetch/fetch_lemma_lookup.sh"
 
     # donwload models we've already trained
   - name: get_model_checkpoints
