@@ -1,6 +1,7 @@
 """Creates a table of lemmas with form, upos, morhpology and
 frequency for our custom lemmatizer."""
 
+from typing import Dict
 from io import StringIO
 
 import pandas as pd
@@ -21,6 +22,23 @@ CONLL_COLUMNS = [
 
 TREEBANKS_PATH = "assets/treebanks/joint/train.conllu"
 LEMMA_TABLE_PATH = "assets/lemmas/lemma_table.jsonl"
+POSSIBLE_FEATURES = [
+    "Tense",
+    "VerbForm",
+    "Voice",
+    "Case",
+    "Gender",
+    "Number",
+    "Degree",
+    "Mood",
+    "Person",
+    "Aspect",
+    "Definite",
+    "PronType",
+    "Polarity",
+    "Poss",
+    "Reflex",
+]
 
 
 def load_conllu(path: str) -> pd.DataFrame:
@@ -40,6 +58,19 @@ def load_conllu(path: str) -> pd.DataFrame:
     return df
 
 
+def features_to_dict(feature_string: str) -> Dict[str, str]:
+    """Converts a string of morphological features to a
+    dictionary."""
+    features = dict()
+    if feature_string == "_":
+        return features
+    declarations = feature_string.split("|")
+    for declaration in declarations:
+        feature, value = declaration.split("=")
+        features[str(feature)] = str(value)
+    return features
+
+
 def main() -> None:
     # Loading treebanks
     treebanks = load_conllu(TREEBANKS_PATH)
@@ -53,6 +84,12 @@ def main() -> None:
         .word_id.rename("frequency")
         .reset_index()
     )
+    lemma_table["feats"] = lemma_table.feats.map(features_to_dict)
+    for feature in POSSIBLE_FEATURES:
+        lemma_table[feature] = lemma_table.feats.map(
+            lambda feats: feats.get(feature, "")
+        )
+    lemma_table = lemma_table.drop(columns="feats")
     # Exporting as JSON lines
     lemma_table.to_json(LEMMA_TABLE_PATH, orient="records", lines=True)
 
