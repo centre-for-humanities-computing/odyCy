@@ -2,7 +2,7 @@ import os
 import json
 from pathlib import Path
 from typing import Dict, List, Literal, Optional, Union, Iterable
-from typing_extensions import TypedDict
+from typing_extensions import TypedDict, NotRequired
 
 from spacy.language import Language
 from spacy.pipeline import Pipe
@@ -35,21 +35,21 @@ class TableEntry(TypedDict):
     lemma: str
     upos: str
     frequency: int
-    Tense: str
-    VerbForm: str
-    Voice: str
-    Case: str
-    Gender: str
-    Number: str
-    Degree: str
-    Mood: str
-    Person: str
-    Aspect: str
-    Definite: str
-    PronType: str
-    Polarity: str
-    Poss: str
-    Reflex: str
+    Tense: NotRequired[str]
+    VerbForm: NotRequired[str]
+    Voice: NotRequired[str]
+    Case: NotRequired[str]
+    Gender: NotRequired[str]
+    Number: NotRequired[str]
+    Degree: NotRequired[str]
+    Mood: NotRequired[str]
+    Person: NotRequired[str]
+    Aspect: NotRequired[str]
+    Definite: NotRequired[str]
+    PronType: NotRequired[str]
+    Polarity: NotRequired[str]
+    Poss: NotRequired[str]
+    Reflex: NotRequired[str]
 
 
 FrequencyTable = Dict[str, List[TableEntry]]
