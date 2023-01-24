@@ -3,6 +3,7 @@ frequency for our custom lemmatizer."""
 
 from typing import Dict
 from io import StringIO
+import json
 
 import pandas as pd
 
@@ -21,7 +22,7 @@ CONLL_COLUMNS = [
 ]
 
 TREEBANKS_PATH = "assets/treebanks/joint/train.conllu"
-LEMMA_TABLE_PATH = "assets/lemmas/lemma_table.jsonl"
+LEMMA_TABLE_PATH = "assets/lemmas/lemma_table.json"
 POSSIBLE_FEATURES = [
     "Tense",
     "VerbForm",
@@ -78,20 +79,26 @@ def main() -> None:
     treebanks["lemma"] = treebanks.lemma.str.lower()
     treebanks["form"] = treebanks.form.str.lower()
     # Creating unique groups with frequencies
-    lemma_table = (
+    lemma_df = (
         treebanks.groupby(["form", "lemma", "upos", "feats"])
         .count()
         .word_id.rename("frequency")
         .reset_index()
     )
-    lemma_table["feats"] = lemma_table.feats.map(features_to_dict)
+    lemma_df["feats"] = lemma_df.feats.map(features_to_dict)
     for feature in POSSIBLE_FEATURES:
-        lemma_table[feature] = lemma_table.feats.map(
+        lemma_df[feature] = lemma_df.feats.map(
             lambda feats: feats.get(feature, "")
         )
-    lemma_table = lemma_table.drop(columns="feats")
-    # Exporting as JSON lines
-    lemma_table.to_json(LEMMA_TABLE_PATH, orient="records", lines=True)
+    lemma_df = lemma_df.drop(columns="feats")
+    # Converting to hashtable with list of records
+    lemma_table = {
+        form: entries.to_dict(orient="records")
+        for form, entries in lemma_df.groupby("form")
+    }
+    # Exporting as JSON
+    with open(LEMMA_TABLE_PATH, "w") as out_file:
+        json.dump(lemma_table, out_file)
 
 
 if __name__ == "__main__":
