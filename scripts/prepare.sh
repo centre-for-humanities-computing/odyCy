@@ -26,3 +26,5 @@ do
 done
 # Creating lemma table
 python3 scripts/prepare_lemma_table.py
+# Parsing named entities from Perseus
+python3 scripts/parse_ner.py
