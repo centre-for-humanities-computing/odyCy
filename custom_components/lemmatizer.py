@@ -121,7 +121,7 @@ def read_json(path: str) -> Dict:
 
 
 def write_json(object: Dict, path: str) -> None:
-    with open(path) as file:
+    with open(path, "w") as file:
         json.dump(object, file)
 
 
