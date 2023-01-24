@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Dict, List, Literal, Optional, Union, Iterable
 from typing_extensions import TypedDict
 
-import pandas as pd
 from spacy.language import Language
 from spacy.pipeline import Pipe
 from spacy.pipeline.lemmatizer import lemmatizer_score
@@ -53,6 +52,11 @@ class TableEntry(TypedDict):
     Reflex: str
 
 
+FrequencyTable = Dict[str, List[TableEntry]]
+
+LookupTable = Dict[str, str]
+
+
 @Language.factory(
     "frequency_lemmatizer",
     assigns=["token.lemma"],
@@ -76,16 +80,49 @@ def make_lemmatizer(
     )  # type: ignore
 
 
-def read_lookup(path: str) -> Dict[str, str]:
-    with open(path) as file:
-        obj = json.load(file)
-        return obj
+def max_freq_lemma(entries: List[TableEntry]) -> str:
+    """Returns lemma with highest frequency from the given entries."""
+    max_index = 0
+    n_entries = len(entries)
+    for index in range(1, n_entries):
+        if entries[index]["frequency"] > entries[max_index]["frequency"]:
+            max_index = index
+    return entries[max_index]["lemma"]
 
 
-def read_table(path: str) -> List[TableEntry]:
+def match_lemma(
+    token_entry: TableEntry, table: FrequencyTable
+) -> Optional[str]:
+    """Returns a lemma for a token if it
+    can be found in the frequency table.
+    """
+    # Tries to find the entries associated with the token in the table
+    match = table.get(token_entry["form"], [])
+    if not match:
+        return None
+    # We go through all the properties to be matched
+    for match_property in MATCH_ORDER:
+        match_new = [
+            entry
+            for entry in match
+            if entry.get(match_property, "")
+            == token_entry.get(match_property, "")
+        ]
+        if not match_new:
+            return max_freq_lemma(entries=match)
+        match = match_new
+    return max_freq_lemma(entries=match)
+
+
+def read_json(path: str) -> Dict:
     with open(path) as file:
-        entries = [json.loads(line) for line in file]
-        return entries
+        res = json.load(file)
+    return res
+
+
+def write_json(object: Dict, path: str) -> None:
+    with open(path) as file:
+        json.dump(object, file)
 
 
 class FrequencyLemmatizer(Pipe):
@@ -122,8 +159,8 @@ class FrequencyLemmatizer(Pipe):
         get_examples=None,
         *,
         nlp=None,
-        table: Optional[List[TableEntry]] = None,
-        lookup: Optional[Dict[str, str]] = None,
+        table: Optional[FrequencyTable] = None,
+        lookup: Optional[LookupTable] = None,
     ) -> None:
         """Initializes the frequency lemmatizer from given lemma table and lookup.
 
@@ -138,7 +175,7 @@ class FrequencyLemmatizer(Pipe):
         if table is None:
             self.table = None
         else:
-            self.table = pd.DataFrame.from_records(table)
+            self.table = table
         self.lookup = lookup
 
     def backoff(self, token: Token) -> str:
@@ -169,28 +206,15 @@ class FrequencyLemmatizer(Pipe):
         # If the table is empty we early return
         if self.table is None:
             return backoff
-        # I make these so we can iterate through properties
-        _token = {
-            "form": orth,
-            "upos": token.pos_,
-            **token.morph.to_dict(),
-        }
-        # We try to match the token first
-        match = self.table[self.table.form == _token["form"]]
-        # If the token is not found we return the backoff lemma
-        if not len(match.index):
+        # I only add frequency for type compatibility
+        token_entry: TableEntry = TableEntry(
+            form=orth, upos=token.pos_, frequency=-1, **token.morph.to_dict()
+        )
+        lemma = match_lemma(token_entry=token_entry, table=self.table)
+        if lemma is None:
             return backoff
-        # We go through all properties in the matching order
-        for match_property in MATCH_ORDER:
-            match_column = match[match_property].fillna("")
-            match_value = _token.get(match_property, "")
-            match_new = match[match_column == match_value]
-            # If the new property doesn't match we return the highest
-            # frequency value from the previous match
-            if not len(match_new.index):
-                return match.loc[match.frequency.idxmax()].lemma
-            match = match_new
-        return match.loc[match.frequency.idxmax()].lemma
+        else:
+            return lemma
 
     def __call__(self, doc: Doc) -> Doc:
         """Apply the lemmatization to a document."""
@@ -215,31 +239,30 @@ class FrequencyLemmatizer(Pipe):
         with open(os.path.join(path, "config.json"), "w") as config_file:
             json.dump(config, config_file)
         if self.table is not None:
-            self.table.to_json(
-                os.path.join(path, "table.jsonl"), orient="records", lines=True
-            )
+            table_path = os.path.join(path, "table.jsonl")
+            write_json(self.table, path=table_path)
         if self.lookup is not None:
-            with open(os.path.join(path, "lookup.json"), "w") as lookup_file:
-                json.dump(self.lookup, lookup_file)
+            lookup_path = os.path.join(path, "lookup.json")
+            write_json(self.lookup, path=lookup_path)
 
     def from_disk(
         self, path: Union[str, Path], *, exclude: Iterable[str] = tuple()
     ) -> "FrequencyLemmatizer":
         """Load component from disk."""
         path = ensure_path(path)
-        config = read_lookup(os.path.join(path, "config.json"))
+        config = read_json(os.path.join(path, "config.json"))
         self.overwrite = config.get("overwrite", self.overwrite)
         self.fallback_priority = config.get(
             "fallback_priority", self.fallback_priority
         )
         try:
-            table: Optional[List[TableEntry]] = read_table(
+            table: Optional[FrequencyTable] = read_json(
                 os.path.join(path, "table.jsonl")
             )
         except FileNotFoundError:
             table = None
         try:
-            lookup: Optional[Dict[str, str]] = read_lookup(
+            lookup: Optional[LookupTable] = read_json(
                 os.path.join(path, "lookup.json")
             )
         except FileNotFoundError:
