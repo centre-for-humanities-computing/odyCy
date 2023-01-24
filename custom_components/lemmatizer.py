@@ -1,7 +1,8 @@
 import os
 import json
 from pathlib import Path
-from typing import Dict, List, Literal, Optional, TypedDict, Union, Iterable
+from typing import Dict, List, Literal, Optional, Union, Iterable
+from typing_extensions import TypedDict
 
 import pandas as pd
 from spacy.language import Language
