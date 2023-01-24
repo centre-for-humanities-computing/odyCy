@@ -56,13 +56,16 @@ def parse_ner_recursive(
     """Parser the element tree recursively and adds element texts
     and named entity tags to the given lists.
     """
-    if (element.tag != "note") and element.text:
+    if element.tag != "note":
         tag = get_tag(element)
-        # print(f"{get_local_name(element.tag)} -> {tag}")
-        texts.append(element.text)
-        tags.append(tag)
-    for child in element:
-        parse_ner_recursive(texts, tags, element=child)
+        if element.text:
+            texts.append(element.text)
+            tags.append(tag)
+        for child in element:
+            parse_ner_recursive(texts, tags, element=child)
+            if child.tail:
+                texts.append(child.tail)
+                tags.append(tag)
 
 
 def parse_ner(root_element) -> GoldDict:
