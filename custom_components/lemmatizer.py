@@ -239,7 +239,7 @@ class FrequencyLemmatizer(Pipe):
         with open(os.path.join(path, "config.json"), "w") as config_file:
             json.dump(config, config_file)
         if self.table is not None:
-            table_path = os.path.join(path, "table.jsonl")
+            table_path = os.path.join(path, "table.json")
             write_json(self.table, path=table_path)
         if self.lookup is not None:
             lookup_path = os.path.join(path, "lookup.json")
@@ -257,7 +257,7 @@ class FrequencyLemmatizer(Pipe):
         )
         try:
             table: Optional[FrequencyTable] = read_json(
-                os.path.join(path, "table.jsonl")
+                os.path.join(path, "table.json")
             )
         except FileNotFoundError:
             table = None
