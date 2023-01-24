@@ -116,10 +116,21 @@ commands:
       - "bash scripts/evaluate/evaluate_jacobo.sh"
 
   # Packaging and pushing to online repositories
+  - name: package_sm
+    help: "Builds the small package locally"
+    script:
+      - "bash scripts/package.sh ${vars.model_name_sm} ${vars.package_name_sm}"
+
+  - name: package_trf
+    help: "Builds the transformer package locally"
+    script:
+      - "bash scripts/package.sh ${vars.model_name_sm} ${vars.package_name_sm}"
+
   - name: push_sm
     help: "Builds and pushes small package to HuggingFace"
     script:
     - "bash scripts/push.sh ${vars.model_name_sm} ${vars.package_name_sm} ${vars.package_version} ${vars.lang}"
+
   - name: push_trf
     help: "Builds and pushes transformer package to HuggingFace"
     script:
