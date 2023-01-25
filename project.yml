@@ -137,11 +137,11 @@ commands:
     script:
       - "bash scripts/evaluate/evaluate_trained.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_version}"
 
-  # - name: evaluate_hub
-  #   help: "Evaluate all HomerCy models that are on the Huggingface Hub"
-  #   script:
-  #     - "bash scripts/evaluate_homercy_checkpoints.sh ${vars.model_name_sm} ${vars.package_version}"
-  #     - "bash scripts/evaluate_homercy_checkpoints.sh ${vars.model_name_trf} ${vars.package_version}"
+  - name: evaluate_hub
+    help: "Evaluate all HomerCy models that are on the Huggingface Hub"
+    script:
+      - "bash scripts/evaluate_homercy_checkpoints.sh ${vars.ner_model.model_name_sm} ${vars.ner_model.package_version}"
+      - "bash scripts/evaluate_homercy_checkpoints.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_version}"
 
   - name: evaluate_jacobo
     help: "Evaluate grc spacy models by others"
