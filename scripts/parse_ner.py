@@ -1,3 +1,4 @@
+"""Parses tagged XML files from Persus to a format usable by SpaCy."""
 from typing import List, Optional, Literal
 from typing_extensions import NamedTuple, TypedDict
 import json

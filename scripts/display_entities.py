@@ -1,9 +1,10 @@
+"""Displays parsed entities in textual context with colors :)))"""
 from typing import List, Dict
 import json
 
 import colorama
 
-from parse_ner import GoldDict, Tag, TAGGED_WORKS
+from parse_ner import GoldDict, Tag
 
 OUT_PATH = "assets/named_entities/gold_standard.jsonl"
 

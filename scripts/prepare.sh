@@ -28,3 +28,6 @@ done
 python3 scripts/prepare_lemma_table.py
 # Parsing named entities from Perseus
 python3 scripts/parse_ner.py
+# Split named entities and prepare them for training
+mkdir -p corpus/ner
+python3 scripts/split_ner.py
