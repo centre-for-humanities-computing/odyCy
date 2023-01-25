@@ -11,6 +11,12 @@ TAGGED_WORKS = [
     # "assets/pretraining/raw/perseus/tlg0653/tlg001/tlg0653.tlg001.perseus-grc1.xml",
 ]
 
+SECTION_SUBTYPE = [
+    "chapter",
+    "section",
+    "work",
+]
+
 OUT_PATH = "assets/named_entities/gold_standard.jsonl"
 
 Tag = Literal["PLACE", "PERSON", "GROUP"]
@@ -56,16 +62,17 @@ def parse_ner_recursive(
     """Parser the element tree recursively and adds element texts
     and named entity tags to the given lists.
     """
-    if element.tag != "note":
-        tag = get_tag(element)
-        if element.text:
-            texts.append(element.text)
+    if element.tag == "note":
+        return
+    tag = get_tag(element)
+    if element.text:
+        texts.append(element.text)
+        tags.append(tag)
+    for child in element:
+        parse_ner_recursive(texts, tags, element=child)
+        if child.tail:
+            texts.append(child.tail)
             tags.append(tag)
-        for child in element:
-            parse_ner_recursive(texts, tags, element=child)
-            if child.tail:
-                texts.append(child.tail)
-                tags.append(tag)
 
 
 def parse_ner(root_element) -> GoldDict:
@@ -95,10 +102,12 @@ def write_jsonl(gold_dicts: List[GoldDict], path: str) -> None:
 
 def main() -> None:
     gold_dicts: List[GoldDict] = []
-    for path in TAGGED_WORKS:
+    for path, subtype in zip(TAGGED_WORKS, SECTION_SUBTYPE):
         tree = etree.parse(path)
         body = tree.xpath("//*[local-name()='body']")[0]
-        gold_dicts.append(parse_ner(root_element=body))
+        sections = body.xpath(f"//*[local-name()='div'][@subtype='{subtype}']")
+        for section in sections:
+            gold_dicts.append(parse_ner(root_element=section))
     write_jsonl(gold_dicts, path=OUT_PATH)
 
 

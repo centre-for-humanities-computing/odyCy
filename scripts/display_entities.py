@@ -39,18 +39,13 @@ def main() -> None:
     print("\n")
     with open(OUT_PATH) as file:
         gold_dicts: List[GoldDict] = [json.loads(line) for line in file]
-    while True:
-        print("Choose work:")
-        n_works = len(TAGGED_WORKS)
-        for index, work in enumerate(TAGGED_WORKS):
-            work_name = work.split("/")[-1].removesuffix(".xml")
-            print(f"    [{index}] - {work_name}")
-        print(f"    [{n_works}] - Exit")
-        choice = int(input())
-        if choice == n_works:
-            exit()
-        gold = gold_dicts[choice]
-        print_entities(gold)
+    for i, gold_dict in enumerate(gold_dicts):
+        print("\n")
+        print("================================")
+        print(f"        Section {i}")
+        print("================================")
+        print_entities(gold_dict)
+        input("Press enter to go to next section...")
 
 
 if __name__ == "__main__":
