@@ -15,8 +15,15 @@ args+=( "--paths.train" )
 args+=( "corpus/$CORPUS/train.spacy" ) 
 args+=( "--paths.dev" ) 
 args+=( "corpus/$CORPUS/dev.spacy" ) 
-args+=( "--code" ) 
-args+=( "custom_components/lemmatizer.py" ) 
+
+# don't import custom component for ner models (it's already inherited)
+if [ $CORPUS != "ner"]
+then
+    args+=( "--code" ) 
+    args+=( "custom_components/lemmatizer.py" )
+fi
+
+# add gpu arg for trf models
 if [ $DEVICE == "gpu" ]
 then
     args+=( "--gpu-id" )
