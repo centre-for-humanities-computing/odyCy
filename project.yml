@@ -1,5 +1,6 @@
 title: "Training pipeline for Ancient Greek Language Model"
-description: "Reproducible workflows for training the ancient greek spaCy pipeline."
+description: >
+  Reproducible workflows for training the ancient greek spaCy pipeline.
 
 vars:
   lang: "grc"
@@ -41,20 +42,26 @@ workflows:
   train_evaluate_trf_base:
     - train_trf_base
     - evaluate_trf_base
+  train_evaluate_sm_ner:
+    - train_sm_ner
+    - evaluate_sm_ner
+  train_evaluate_trf_ner:
+    - train_trf_ner
+    - evaluate_trf_ner
   all_sm_base:
     - install
     - fetch_assets
     - prepare
     - train_sm_base
     - evaluate_sm_base
-    - push_sm
+    - push_sm_base
   all_trf_base:
     - install
     - fetch_assets
     - prepare
     - train_trf_base
     - evaluate_trf_base
-    - push_trf
+    - push_trf_base
   # hub_models:
   #   - get_model_checkpoints
   #   - evaluate_hub
@@ -149,22 +156,42 @@ commands:
       - "bash scripts/evaluate/evaluate_jacobo.sh"
 
   # Packaging and pushing to online repositories
-  - name: package_sm
+  - name: package_sm_base
     help: "Builds the small package locally"
     script:
       - "bash scripts/package.sh ${vars.base_model.model_name_sm} ${vars.base_model.package_name_sm}"
 
-  - name: package_trf
+  - name: package_trf_base
     help: "Builds the transformer package locally"
     script:
       - "bash scripts/package.sh ${vars.base_model.model_name_sm} ${vars.base_model.package_name_sm}"
 
-  - name: push_sm
+  - name: push_sm_base
     help: "Builds and pushes small package to HuggingFace"
     script:
     - "bash scripts/push.sh ${vars.base_model.model_name_sm} ${vars.base_model.package_name_sm} ${vars.base_model.package_version} ${vars.lang}"
 
-  - name: push_trf
+  - name: push_trf_base
     help: "Builds and pushes transformer package to HuggingFace"
     script:
     - "bash scripts/push.sh ${vars.base_model.model_name_trf} ${vars.base_model.package_name_trf} ${vars.base_model.package_version} ${vars.lang}"
+
+  - name: package_sm_ner
+    help: "Builds the small final package locally"
+    script:
+      - "bash scripts/package.sh ${vars.ner_model.model_name_sm} ${vars.ner_model.package_name_sm}"
+
+  - name: package_trf_ner
+    help: "Builds the transformer package locally"
+    script:
+      - "bash scripts/package.sh ${vars.ner_model.model_name_sm} ${vars.ner_model.package_name_sm}"
+
+  - name: push_sm_ner
+    help: "Builds and pushes small package to HuggingFace"
+    script:
+    - "bash scripts/push.sh ${vars.ner_model.model_name_sm} ${vars.ner_model.package_name_sm} ${vars.ner_model.package_version} ${vars.lang}"
+
+  - name: push_trf_ner
+    help: "Builds and pushes transformer package to HuggingFace"
+    script:
+    - "bash scripts/push.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_name_trf} ${vars.ner_model.package_version} ${vars.lang}"
