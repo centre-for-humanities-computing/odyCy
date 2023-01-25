@@ -17,7 +17,7 @@ args+=( "--paths.dev" )
 args+=( "corpus/$CORPUS/dev.spacy" ) 
 
 # don't import custom component for ner models (it's already inherited)
-if [ $CORPUS != "ner"]
+if [ $CORPUS != "ner" ]
 then
     args+=( "--code" ) 
     args+=( "custom_components/lemmatizer.py" )
