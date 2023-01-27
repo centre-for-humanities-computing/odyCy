@@ -179,12 +179,12 @@ commands:
   - name: package_sm_ner
     help: "Builds the small final package locally"
     script:
-      - "bash scripts/package.sh ${vars.ner_model.model_name_sm} ${vars.ner_model.package_name_sm}"
+      - "bash scripts/package.sh ${vars.ner_model.model_name_sm} ${vars.ner_model.package_name_sm} ${vars.ner_model.package_version}"
 
   - name: package_trf_ner
     help: "Builds the transformer package locally"
     script:
-      - "bash scripts/package.sh ${vars.ner_model.model_name_sm} ${vars.ner_model.package_name_sm}"
+      - "bash scripts/package.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_name_trf} ${vars.ner_model.package_version}"
 
   - name: push_sm_ner
     help: "Builds and pushes small package to HuggingFace"
