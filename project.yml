@@ -62,10 +62,10 @@ workflows:
     - train_trf_base
     - evaluate_trf_base
     - push_trf_base
-  # hub_models:
-  #   - get_model_checkpoints
-  #   - evaluate_hub
-  #   - evaluate_jacobo
+  hub_models:
+    - get_model_checkpoints
+    - evaluate_hub
+    - evaluate_jacobo
 
 commands:
   # Installation
