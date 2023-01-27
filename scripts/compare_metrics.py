@@ -45,7 +45,10 @@ for model_dir in md.iterdir():
 
                 # append metrics
                 for key in keys_of_interest:
-                    out.update({key: metrics[key]})
+                    if key in metrics.keys():
+                        out.update({key: metrics[key]})
+                    else:
+                        out.update({key: None})
 
                 results.append(out)
 
