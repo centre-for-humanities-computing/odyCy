@@ -2,7 +2,9 @@
 & generate a csv file with selected results (keys_of_interest).
 """
 
+import os
 import json
+from datetime import datetime
 from pathlib import Path
 import pandas as pd
 
@@ -58,4 +60,6 @@ for model_dir in md.iterdir():
 
 
 results_table = pd.DataFrame(results)
-results_table.to_csv('results.csv')
+fname = datetime.now().strftime("%y%m%d%H%M") + "_model_comparison.csv"
+# save table to metrics/ with a leading timestamp in the filename
+results_table.to_csv(md.joinpath(fname), index=False)
