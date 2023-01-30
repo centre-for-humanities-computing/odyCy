@@ -17,14 +17,14 @@ args+=( "--paths.dev" )
 args+=( "corpus/$CORPUS/dev.spacy" ) 
 
 # don't import custom component for ner models (it's already inherited)
-if [ $CORPUS != "ner" ]
+if [ "$CORPUS" != "ner" ]
 then
     args+=( "--code" ) 
     args+=( "custom_components/lemmatizer.py" )
 fi
 
 # add gpu arg for trf models
-if [ $DEVICE == "gpu" ]
+if [ "$DEVICE" == "gpu" ]
 then
     args+=( "--gpu-id" )
     args+=( "0" )

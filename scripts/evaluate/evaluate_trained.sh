@@ -4,12 +4,12 @@ PACKAGE_VERSION=$2
 
 # turn on gpu if available
 args=()
-if [ $DEVICE == "gpu" ]
+args+=( "--gpu-id" )
+if [ "$DEVICE" == "gpu" ]
 then
-    args+=( "--gpu-id" )
     args+=( "0" )
 else
-    args+=( "cpu" )
+    args+=( "-1" )
 fi
 
 # us the training env
