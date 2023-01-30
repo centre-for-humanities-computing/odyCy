@@ -1,3 +1,7 @@
+"""Load in all benchmarks from the metrics/ directory 
+& generate a csv file with selected results (keys_of_interest).
+"""
+
 import json
 from pathlib import Path
 import pandas as pd

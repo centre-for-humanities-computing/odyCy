@@ -1,3 +1,8 @@
+"""
+Convert golden dictionaries for NER to spacy binary format.
+Relies on a grc_dep_treebanks_trf checkpoint to make the docs.
+"""
+
 import os
 import json
 from typing import Dict, List
