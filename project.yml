@@ -63,7 +63,7 @@ workflows:
     - evaluate_trf_base
     - push_trf_base
   hub_models:
-    - get_model_checkpoints
+    - get_homercy_checkpoints
     - evaluate_hub
     - evaluate_jacobo
 
@@ -72,7 +72,8 @@ commands:
   - name: install
     help: "Creating environments and installing dependencies"
     script:
-      - "bash scripts/create_environments.sh"
+      - "bash scripts/dependencies/server_dependencies.sh"
+      - "bash scripts/dependencies/create_environments.sh"
     deps:
       - "requirements_preprocessing.txt"
       - "requirements_training.txt"
@@ -91,10 +92,10 @@ commands:
       - "bash scripts/fetch/fetch_lemma_lookup.sh"
 
     # donwload models we've already trained
-  - name: get_model_checkpoints
+  - name: get_homercy_checkpoints
     help: Downloads pretrained HomerCy models from huggingface hub
     script:
-      - "bash scripts/get_model_checkpoints.sh"
+      - "bash scripts/dependencies/get_homercy_checkpoints.sh"
 
   # Preprocessing assets for training
   - name: prepare
