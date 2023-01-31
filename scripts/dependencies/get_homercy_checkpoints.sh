@@ -9,6 +9,8 @@ pip uninstall grc_dep_treebanks_sm -y
 
 # install final models
 pip install https://huggingface.co/janko/grc_homercy_treebanks_trf/resolve/main/grc_homercy_treebanks_trf-any-py3-none-any.whl
+pip install https://huggingface.co/janko/grc_homercy_treebanks_sm/resolve/main/grc_homercy_treebanks_sm-any-py3-none-any.whl
 
 # install dep models
 pip install https://huggingface.co/janko/grc_dep_treebanks_trf/resolve/main/grc_dep_treebanks_trf-any-py3-none-any.whl
+pip install https://huggingface.co/janko/grc_dep_treebanks_sm/resolve/main/grc_dep_treebanks_sm-any-py3-none-any.whl
