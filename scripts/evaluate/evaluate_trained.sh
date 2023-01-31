@@ -2,12 +2,25 @@
 MODEL_NAME=$1
 PACKAGE_VERSION=$2
 
+# turn on gpu if available
+args=()
+args+=( "--gpu-id" )
+if [ "$DEVICE" == "gpu" ]
+then
+    args+=( "0" )
+else
+    args+=( "-1" )
+fi
+
+# us the training env
 source environments/training/bin/activate
-for CORPUS in "joint" "perseus" "proiel"
+
+# evaluate each corpus
+for CORPUS in "joint" "perseus" "proiel" "ner"
 do
     mkdir -p "metrics/$MODEL_NAME/$PACKAGE_VERSION/$CORPUS"
     for WHICH in "best" "last"
     do
-        python3 -m spacy evaluate "training/$MODEL_NAME/model-$WHICH" corpus/$CORPUS/test.spacy --output "metrics/$MODEL_NAME/$PACKAGE_VERSION/$CORPUS/$WHICH.json" --code "custom_components/lemmatizer.py"
+        python3 -m spacy evaluate "training/$MODEL_NAME/model-$WHICH" corpus/$CORPUS/test.spacy --output "metrics/$MODEL_NAME/$PACKAGE_VERSION/$CORPUS/$WHICH.json" --code "custom_components/lemmatizer.py" "${args[@]}"
     done
 done
