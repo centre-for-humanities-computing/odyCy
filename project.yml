@@ -1,19 +1,33 @@
-title: Training pipeline for Ancient Greek Language Model
+title: "Training pipeline for Ancient Greek Language Model"
 description: >
   Reproducible workflows for training the ancient greek spaCy pipeline.
 
 vars:
   lang: "grc"
-  config_trf: "transformer"
-  config_sm: "sm"
-  model_name_sm: "grc_homercy_treebanks_sm"
-  model_name_trf: "grc_homercy_treebanks_trf"
-  package_name_sm: "homercy_treebanks_sm"
-  package_name_trf: "homercy_treebanks_trf"
-  training_corpus: "joint"
+  # base models (dep)
+  base_model:
+    config_trf: "transformer"
+    config_sm: "sm"
+    model_name_sm: "grc_dep_treebanks_sm"
+    model_name_trf: "grc_dep_treebanks_trf"
+    package_name_sm: "dep_treebanks_sm" # TODO workaround
+    package_name_trf: "dep_treebanks_trf" # TODO workaround
+    training_corpus: "joint"
+    package_version: "0.5.0"
+  # ner models (core)
+  ner_model:
+    config_trf: "transformer_ner"
+    config_sm: "sm_ner"
+    model_name_sm: "grc_homercy_treebanks_sm"
+    model_name_trf: "grc_homercy_treebanks_trf"
+    package_name_sm: "homercy_treebanks_sm" # TODO workaround
+    package_name_trf: "homercy_treebanks_trf" # TODO workaround
+    training_corpus: "ner"
+    package_version: "0.0.1"
+  # pkg versions
+  # misc
   gpu: 0
-  package_version: "0.0.1"
-  spacy_version: ">=3.4.0"
+  spacy_version: ">=3.5.0"
 
 directories: ["assets", "corpus", "training", "scripts"]
 
@@ -22,28 +36,55 @@ workflows:
     - install
     - fetch_assets
     - prepare
-  train_evaluate_sm:
-    - train_sm
-    - evaluate_sm
-  train_evaluate_trf:
-    - train_trf
-    - evaluate_trf
-  all_sm:
+    - get_homercy_checkpoints
+  train_evaluate_sm_base:
+    - train_sm_base
+    - evaluate_sm_base
+  train_evaluate_trf_base:
+    - train_trf_base
+    - evaluate_trf_base
+  train_evaluate_sm_ner:
+    - train_sm_ner
+    - evaluate_sm_ner
+  train_evaluate_trf_ner:
+    - train_trf_ner
+    - evaluate_trf_ner
+  all_sm_base:
     - install
     - fetch_assets
     - prepare
-    - train_sm
-    - evaluate_sm
-    - push_sm
-  all_trf:
+    - train_sm_base
+    - evaluate_sm_base
+    - package_sm_base
+    - push_sm_base
+  all_trf_base:
     - install
     - fetch_assets
     - prepare
-    - train_trf
-    - evaluate_trf
-    - push_trf
+    - train_trf_base
+    - evaluate_trf_base
+    - package_trf_base
+    - push_trf_base
+  all_sm_ner:
+    - install
+    - fetch_assets
+    - prepare
+    - get_homercy_checkpoints
+    - train_sm_ner
+    - evaluate_sm_ner
+    - package_sm_ner
+    - push_sm_ner
+  all_trf_ner:
+    - install
+    - fetch_assets
+    - prepare
+    - get_homercy_checkpoints
+    - train_trf_ner
+    - evaluate_trf_ner
+    - package_trf_ner
+    - push_trf_ner
   hub_models:
-    - get_model_checkpoints
+    - get_homercy_checkpoints
     - evaluate_hub
     - evaluate_jacobo
 
@@ -52,7 +93,8 @@ commands:
   - name: install
     help: "Creating environments and installing dependencies"
     script:
-      - "bash scripts/create_environments.sh"
+      - "bash scripts/dependencies/server_dependencies.sh"
+      - "bash scripts/dependencies/create_environments.sh"
     deps:
       - "requirements_preprocessing.txt"
       - "requirements_training.txt"
@@ -71,10 +113,10 @@ commands:
       - "bash scripts/fetch/fetch_lemma_lookup.sh"
 
     # donwload models we've already trained
-  - name: get_model_checkpoints
+  - name: get_homercy_checkpoints
     help: Downloads pretrained HomerCy models from huggingface hub
     script:
-      - "bash scripts/get_model_checkpoints.sh"
+      - "bash scripts/dependencies/get_homercy_checkpoints.sh"
 
   # Preprocessing assets for training
   - name: prepare
@@ -83,32 +125,51 @@ commands:
       - "bash scripts/prepare.sh"
 
   # Training scripts
-  - name: train_sm
+  - name: train_sm_base
     help: "Trains a sm model over the dataset"
     script:
-      - "bash scripts/train.sh ${vars.config_sm} ${vars.model_name_sm} ${vars.training_corpus} cpu"
+      - "bash scripts/train.sh ${vars.base_model.config_sm} ${vars.base_model.model_name_sm} ${vars.base_model.training_corpus} cpu"
 
-  - name: train_trf
+  - name: train_trf_base
     help: "Finetunes the Bert based transformer model on the treebanks"
     script:
-      - "bash scripts/train.sh ${vars.config_trf} ${vars.model_name_trf} ${vars.training_corpus} gpu"
+      - "bash scripts/train.sh ${vars.base_model.config_trf} ${vars.base_model.model_name_trf} ${vars.base_model.training_corpus} gpu"
+
+  - name: train_sm_ner
+    help: "Trains an extra NER component using the base small model"
+    script:
+      - "bash scripts/train.sh ${vars.ner_model.config_sm} ${vars.ner_model.model_name_sm} ${vars.ner_model.training_corpus} cpu"
+
+  - name: train_trf_ner
+    help: "Trains an extra NER component using the base transformer model"
+    script:
+      - "bash scripts/train.sh ${vars.ner_model.config_trf} ${vars.ner_model.model_name_trf} ${vars.ner_model.training_corpus} gpu"
 
   # Evaluation scripts 
-  - name: evaluate_sm
-    help: "Evaluate the sm model on test data & save the metrics"
+  - name: evaluate_sm_base
+    help: "Evaluate the sm base model on test data & save the metrics"
     script:
-      - "bash scripts/evaluate/evaluate_trained.sh ${vars.model_name_sm} ${vars.package_version}"
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.base_model.model_name_sm} ${vars.base_model.package_version}"
 
-  - name: evaluate_trf
+  - name: evaluate_trf_base
     help: "Evaluate the Bert based transformer model on test data & save the metrics"
     script:
-      - "bash scripts/evaluate/evaluate_trained.sh ${vars.model_name_trf} ${vars.package_version}"
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.base_model.model_name_trf} ${vars.base_model.package_version}"
+
+  - name: evaluate_sm_ner
+    help: "Evaluate the sm ner model & save the metrics"
+    script:
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.ner_model.model_name_sm} ${vars.ner_model.package_version}"
+
+  - name: evaluate_trf_ner
+    help: "Evaluate the transformer ner model & save the metrics"
+    script:
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_version}"
 
   - name: evaluate_hub
     help: "Evaluate all HomerCy models that are on the Huggingface Hub"
     script:
-      - "bash scripts/evaluate_homercy_checkpoints.sh ${vars.model_name_sm} ${vars.package_version}"
-      - "bash scripts/evaluate_homercy_checkpoints.sh ${vars.model_name_trf} ${vars.package_version}"
+      - "bash scripts/evaluate/evaluate_homercy_checkpoints.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_version}"
 
   - name: evaluate_jacobo
     help: "Evaluate grc spacy models by others"
@@ -116,22 +177,42 @@ commands:
       - "bash scripts/evaluate/evaluate_jacobo.sh"
 
   # Packaging and pushing to online repositories
-  - name: package_sm
+  - name: package_sm_base
     help: "Builds the small package locally"
     script:
-      - "bash scripts/package.sh ${vars.model_name_sm} ${vars.package_name_sm}"
+      - "bash scripts/package.sh ${vars.base_model.model_name_sm} ${vars.base_model.package_name_sm} ${vars.base_model.package_version} frequency_lemmatizer"
 
-  - name: package_trf
+  - name: package_trf_base
     help: "Builds the transformer package locally"
     script:
-      - "bash scripts/package.sh ${vars.model_name_sm} ${vars.package_name_sm}"
+      - "bash scripts/package.sh ${vars.base_model.model_name_trf} ${vars.base_model.package_name_trf} ${vars.base_model.package_version} frequency_lemmatizer"
 
-  - name: push_sm
+  - name: package_sm_ner
+    help: "Builds the small final package locally"
+    script:
+      - "bash scripts/package.sh ${vars.ner_model.model_name_sm} ${vars.ner_model.package_name_sm} ${vars.ner_model.package_version} frequency_lemmatizer"
+
+  - name: package_trf_ner
+    help: "Builds the transformer package locally"
+    script:
+      - "bash scripts/package.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_name_trf} ${vars.ner_model.package_version} frequency_lemmatizer"
+
+  - name: push_sm_base
+    help: "Pushes small package to HuggingFace (must be built before)"
+    script:
+    - "bash scripts/push.sh ${vars.base_model.model_name_sm} ${vars.base_model.package_name_sm} ${vars.base_model.package_version} ${vars.lang}"
+
+  - name: push_trf_base
+    help: "Pushes transformer package to HuggingFace (must be built before)"
+    script:
+    - "bash scripts/push.sh ${vars.base_model.model_name_trf} ${vars.base_model.package_name_trf} ${vars.base_model.package_version} ${vars.lang}"
+
+  - name: push_sm_ner
     help: "Builds and pushes small package to HuggingFace"
     script:
-    - "bash scripts/push.sh ${vars.model_name_sm} ${vars.package_name_sm} ${vars.package_version} ${vars.lang}"
+    - "bash scripts/push.sh ${vars.ner_model.model_name_sm} ${vars.ner_model.package_name_sm} ${vars.ner_model.package_version} ${vars.lang}"
 
-  - name: push_trf
+  - name: push_trf_ner
     help: "Builds and pushes transformer package to HuggingFace"
     script:
-    - "bash scripts/push.sh ${vars.model_name_trf} ${vars.package_name_trf} ${vars.package_version} ${vars.lang}"
+    - "bash scripts/push.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_name_trf} ${vars.ner_model.package_version} ${vars.lang}"

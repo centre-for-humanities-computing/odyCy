@@ -31,3 +31,10 @@ python3 scripts/parse_ner.py
 # Split named entities and prepare them for training
 mkdir -p corpus/ner
 python3 scripts/split_ner.py
+
+# binarize NER
+echo "Binarizing NER training data using grc_dep_treebanks_trf"
+deactivate
+source environments/training/bin/activate
+pip install https://huggingface.co/janko/grc_dep_treebanks_trf/resolve/main/grc_dep_treebanks_trf-any-py3-none-any.whl
+python3 scripts/binarize_ner.py
