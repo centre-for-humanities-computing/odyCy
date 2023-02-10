@@ -49,6 +49,9 @@ workflows:
   train_evaluate_trf_ner:
     - train_trf_ner
     - evaluate_trf_ner
+  train_evaluate_xlm:
+    - train_xlm
+    - evaluate_xlm
   all_sm_base:
     - install
     - fetch_assets
@@ -93,7 +96,7 @@ commands:
   - name: install
     help: "Creating environments and installing dependencies"
     script:
-      - "bash scripts/dependencies/server_dependencies.sh"
+      # - "bash scripts/dependencies/server_dependencies.sh"
       - "bash scripts/dependencies/create_environments.sh"
     deps:
       - "requirements_preprocessing.txt"
@@ -144,6 +147,14 @@ commands:
     help: "Trains an extra NER component using the base transformer model"
     script:
       - "bash scripts/train.sh ${vars.ner_model.config_trf} ${vars.ner_model.model_name_trf} ${vars.ner_model.training_corpus} gpu"
+
+  - name: train_xlm
+    script:
+      -  "bash scripts/train.sh configs/transformer_multilingual.cfg grc_dep_treebanks_xlm ${vars.ner_model.training_corpus} gpu"
+
+  - name: evaluate_xlm
+    script:
+      - "bash scripts/evaluate/evaluate_trained.sh grc_dep_treebanks_xlm 0.0.0"
 
   # Evaluation scripts 
   - name: evaluate_sm_base
