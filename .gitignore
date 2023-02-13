@@ -4,13 +4,19 @@ training/
 environments/
 wandb/
 metrics/
+models/
 project.lock
+errors.md
+conll.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 .python-version
 packages/
+
+# VS Code
+.vscode/
 
 # Jan's stupid mac files
 .DS_Store
