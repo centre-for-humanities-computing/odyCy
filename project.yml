@@ -96,7 +96,7 @@ commands:
   - name: install
     help: "Creating environments and installing dependencies"
     script:
-      # - "bash scripts/dependencies/server_dependencies.sh"
+      - "bash scripts/dependencies/server_dependencies.sh"
       - "bash scripts/dependencies/create_environments.sh"
     deps:
       - "requirements_preprocessing.txt"
@@ -186,6 +186,11 @@ commands:
   - name: evaluate_xlm
     script:
       - "bash scripts/evaluate/evaluate_trained.sh grc_dep_treebanks_xlm 0.0.0"
+
+  - name: evaluate_lemmatizers
+    help: "Evaluate homercy with different lemmatizers."
+    script:
+      - "bash scripts/evaluate_lemmatizers.sh"
 
   # Packaging and pushing to online repositories
   - name: package_sm_base
