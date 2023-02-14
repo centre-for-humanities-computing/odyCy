@@ -179,7 +179,7 @@ commands:
   - name: evaluate_lemmatizers
     help: "Evaluate homercy with different lemmatizers."
     script:
-      - "bash scripts/evaluate_lemmatizers.sh"
+      - "bash scripts/evaluate/evaluate_lemmatizers.sh"
 
   # Packaging and pushing to online repositories
   - name: package_sm_base

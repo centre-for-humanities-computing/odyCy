@@ -7,6 +7,8 @@ metrics/
 models/
 project.lock
 errors.md
+render_markdown.sh
+error_analysis/
 conll.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
