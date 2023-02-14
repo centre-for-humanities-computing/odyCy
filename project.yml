@@ -49,6 +49,9 @@ workflows:
   train_evaluate_trf_ner:
     - train_trf_ner
     - evaluate_trf_ner
+  train_evaluate_xlm:
+    - train_xlm
+    - evaluate_xlm
   all_sm_base:
     - install
     - fetch_assets
@@ -150,6 +153,10 @@ commands:
     script:
       - "bash scripts/train.sh ${vars.ner_model.config_trf} ${vars.ner_model.model_name_trf} ${vars.ner_model.training_corpus} gpu"
 
+  - name: train_xlm
+    script:
+      -  "bash scripts/train.sh transformer_multilingual grc_dep_treebanks_xlm ${vars.base_model.training_corpus} gpu"
+
   - name: train_trf_proiel
     script:
       - "bash scripts/train.sh ${vars.base_model.config_trf} grc_dep_proiel_trf proiel gpu"
@@ -197,6 +204,15 @@ commands:
     script:
       - "bash scripts/evaluate/evaluate_jacobo.sh"
 
+  - name: evaluate_xlm
+    script:
+      - "bash scripts/evaluate/evaluate_trained.sh grc_dep_treebanks_xlm 0.0.0"
+
+  - name: evaluate_lemmatizers
+    help: "Evaluate homercy with different lemmatizers."
+    script:
+      - "bash scripts/evaluate/evaluate_lemmatizers.sh"
+
   # Packaging and pushing to online repositories
   - name: package_sm_base
     help: "Builds the small package locally"
@@ -218,6 +234,10 @@ commands:
     script:
       - "bash scripts/package.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_name_trf} ${vars.ner_model.package_version} frequency_lemmatizer"
 
+  - name: package_xlm_base
+    script:
+      - "bash scripts/package.sh grc_dep_treebanks_xlm dep_treebanks_xlm 0.0.1 frequency_lemmatizer"
+
   - name: push_sm_base
     help: "Pushes small package to HuggingFace (must be built before)"
     script:
@@ -237,3 +257,7 @@ commands:
     help: "Builds and pushes transformer package to HuggingFace"
     script:
     - "bash scripts/push.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_name_trf} ${vars.ner_model.package_version} ${vars.lang}"
+
+  - name: push_xlm_base
+    script:
+      - "bash scripts/push.sh grc_dep_treebanks_xlm dep_treebanks_xlm 0.0.1 grc"
