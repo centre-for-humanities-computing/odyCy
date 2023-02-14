@@ -24,7 +24,16 @@ vars:
     package_name_trf: "homercy_treebanks_trf" # TODO workaround
     training_corpus: "ner"
     package_version: "0.0.1"
-  # pkg versions
+  # experimental models
+  exp_models:
+    config_trf: "transformer"
+    config_xlm: "transformer_multilingual"
+    model_name_trf_proiel: "grc_dep_proiel_trf"
+    model_name_trf_perseus: "grc_dep_perseus_trf"
+    model_name_xlm_base: "grc_dep_treebanks_xlm"
+    model_name_xlm_proiel: "grc_dep_proiel_xlm"
+    model_name_xlm_perseus: "grc_dep_perseus_xlm"
+    package_version: "0.0.0"
   # misc
   gpu: 0
   spacy_version: ">=3.5.0"
@@ -49,9 +58,6 @@ workflows:
   train_evaluate_trf_ner:
     - train_trf_ner
     - evaluate_trf_ner
-  train_evaluate_xlm:
-    - train_xlm
-    - evaluate_xlm
   all_sm_base:
     - install
     - fetch_assets
@@ -90,11 +96,18 @@ workflows:
     - get_homercy_checkpoints
     - evaluate_hub
     - evaluate_jacobo
-  exp_separate:
-    - train_trf_proiel
-    - evaluate_trf_proiel
-    - train_trf_perseus
-    - evaluate_trf_perseus
+  exp_trf_separate:
+    - train_trf_separate
+    - evaluate_trf_separate
+    - package_trf_separate
+  exp_xlm_base:
+    - train_xlm_base
+    - evaluate_xlm_base
+    - package_xlm_base
+  exp_xlm_separate:
+    - train_xlm_separate
+    - evaluate_xlm_separate
+    - package_xlm_separate
 
 commands:
   # Installation
@@ -153,17 +166,19 @@ commands:
     script:
       - "bash scripts/train.sh ${vars.ner_model.config_trf} ${vars.ner_model.model_name_trf} ${vars.ner_model.training_corpus} gpu"
 
-  - name: train_xlm
+  - name: train_xlm_base
     script:
-      -  "bash scripts/train.sh transformer_multilingual grc_dep_treebanks_xlm ${vars.base_model.training_corpus} gpu"
+      -  "bash scripts/train.sh ${vars.exp_models.config_xlm} ${vars.exp_models.model_name_xlm_base} ${vars.base_model.training_corpus} gpu"
 
-  - name: train_trf_proiel
+  - name: train_trf_separate
     script:
-      - "bash scripts/train.sh ${vars.base_model.config_trf} grc_dep_proiel_trf proiel gpu"
+      - "bash scripts/train.sh ${vars.exp_models.config_trf} ${vars.exp_models.model_name_trf_proiel} proiel gpu"
+      - "bash scripts/train.sh ${vars.exp_models.config_trf} ${vars.exp_models.model_name_trf_perseus} perseus gpu"
 
-  - name: train_trf_perseus
+  - name: train_xlm_separate
     script:
-      - "bash scripts/train.sh ${vars.base_model.config_trf} grc_dep_perseus_trf perseus gpu"
+      -  "bash scripts/train.sh ${vars.exp_models.config_xlm} ${vars.exp_models.model_name_xlm_proiel} proiel gpu"
+      -  "bash scripts/train.sh ${vars.exp_models.config_xlm} ${vars.exp_models.model_name_xlm_perseus} perseus gpu"
 
   # Evaluation scripts 
   - name: evaluate_sm_base
@@ -186,14 +201,6 @@ commands:
     script:
       - "bash scripts/evaluate/evaluate_trained.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_version}"
 
-  - name: evaluate_trf_proiel
-    script:
-      - "bash scripts/evaluate/evaluate_trained.sh grc_dep_proiel_trf 0.0.1"
-
-  - name: evaluate_trf_perseus
-    script:
-      - "bash scripts/evaluate/evaluate_trained.sh grc_dep_perseus_trf 0.0.1"
-
   - name: evaluate_hub
     help: "Evaluate all HomerCy models that are on the Huggingface Hub"
     script:
@@ -204,16 +211,26 @@ commands:
     script:
       - "bash scripts/evaluate/evaluate_jacobo.sh"
 
-  - name: evaluate_xlm
+  - name: evaluate_trf_separate
     script:
-      - "bash scripts/evaluate/evaluate_trained.sh grc_dep_treebanks_xlm 0.0.0"
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.exp_models.model_name_trf_proiel} ${vars.exp_models.package_version}"
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.exp_models.model_name_trf_perseus} ${vars.exp_models.package_version}"
+
+  - name: evaluate_xlm_base
+    script:
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.exp_models.model_name_xlm_base} ${vars.exp_models.package_version}"
+
+  - name: evaluate_xlm_separate
+    script:
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.exp_models.model_name_xlm_proiel} ${vars.exp_models.package_version}"
+      - "bash scripts/evaluate/evaluate_trained.sh ${vars.exp_models.model_name_xlm_perseus} ${vars.exp_models.package_version}"
 
   - name: evaluate_lemmatizers
     help: "Evaluate homercy with different lemmatizers."
     script:
       - "bash scripts/evaluate/evaluate_lemmatizers.sh"
 
-  # Packaging and pushing to online repositories
+  # Packaging
   - name: package_sm_base
     help: "Builds the small package locally"
     script:
@@ -236,8 +253,19 @@ commands:
 
   - name: package_xlm_base
     script:
-      - "bash scripts/package.sh grc_dep_treebanks_xlm dep_treebanks_xlm 0.0.1 frequency_lemmatizer"
+      - "bash scripts/package.sh ${vars.exp_models.model_name_xlm_base} dep_treebanks_xlm ${vars.exp_models.package_version} frequency_lemmatizer"
 
+  - name: package_trf_separate
+    script:
+      - "bash scripts/package.sh ${vars.exp_models.model_name_trf_proiel} dep_proiel_trf ${vars.exp_models.package_version} frequency_lemmatizer"
+      - "bash scripts/package.sh ${vars.exp_models.model_name_trf_perseus} dep_perseus_trf ${vars.exp_models.package_version} frequency_lemmatizer"
+
+  - name: package_xlm_separate
+    script:
+      - "bash scripts/package.sh ${vars.exp_models.model_name_xlm_proiel} dep_proiel_xlm ${vars.exp_models.package_version} frequency_lemmatizer"
+      - "bash scripts/package.sh ${vars.exp_models.model_name_xlm_perseus} dep_perseus_xlm ${vars.exp_models.package_version} frequency_lemmatizer"
+
+  # pushing to huggingface hub
   - name: push_sm_base
     help: "Pushes small package to HuggingFace (must be built before)"
     script:
@@ -260,4 +288,14 @@ commands:
 
   - name: push_xlm_base
     script:
-      - "bash scripts/push.sh grc_dep_treebanks_xlm dep_treebanks_xlm 0.0.1 grc"
+      - "bash scripts/push.sh ${vars.exp_models.model_name_xlm_base} dep_treebanks_xlm 0.0.1 grc"
+
+  - name: push_trf_separate
+    script:
+      - "bash scripts/push.sh ${vars.exp_models.model_name_trf_proiel} dep_proiel_trf ${vars.exp_models.package_version} grc"
+      - "bash scripts/push.sh ${vars.exp_models.model_name_trf_perseus} dep_perseus_trf ${vars.exp_models.package_version} grc"
+
+  - name: push_xlm_separate
+    script:
+      - "bash scripts/push.sh ${vars.exp_models.model_name_xlm_proiel} dep_proiel_trf ${vars.exp_models.package_version} grc"
+      - "bash scripts/push.sh ${vars.exp_models.model_name_xlm_perseus} dep_perseus_trf ${vars.exp_models.package_version} grc"
