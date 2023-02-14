@@ -90,6 +90,11 @@ workflows:
     - get_homercy_checkpoints
     - evaluate_hub
     - evaluate_jacobo
+  exp_separate:
+    - train_trf_proiel
+    - evaluate_trf_proiel
+    - train_trf_perseus
+    - evaluate_trf_perseus
 
 commands:
   # Installation
@@ -152,6 +157,14 @@ commands:
     script:
       -  "bash scripts/train.sh transformer_multilingual grc_dep_treebanks_xlm ${vars.base_model.training_corpus} gpu"
 
+  - name: train_trf_proiel
+    script:
+      - "bash scripts/train.sh ${vars.base_model.config_trf} grc_dep_proiel_trf proiel gpu"
+
+  - name: train_trf_perseus
+    script:
+      - "bash scripts/train.sh ${vars.base_model.config_trf} grc_dep_perseus_trf perseus gpu"
+
   # Evaluation scripts 
   - name: evaluate_sm_base
     help: "Evaluate the sm base model on test data & save the metrics"
@@ -172,6 +185,14 @@ commands:
     help: "Evaluate the transformer ner model & save the metrics"
     script:
       - "bash scripts/evaluate/evaluate_trained.sh ${vars.ner_model.model_name_trf} ${vars.ner_model.package_version}"
+
+  - name: evaluate_trf_proiel
+    script:
+      - "bash scripts/evaluate/evaluate_trained.sh grc_dep_proiel_trf 0.0.1"
+
+  - name: evaluate_trf_perseus
+    script:
+      - "bash scripts/evaluate/evaluate_trained.sh grc_dep_perseus_trf 0.0.1"
 
   - name: evaluate_hub
     help: "Evaluate all HomerCy models that are on the Huggingface Hub"
