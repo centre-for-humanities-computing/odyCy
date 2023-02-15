@@ -1,13 +1,14 @@
 import json
-from typing import List, Iterable, Dict, Sequence
-from io import StringIO
 import os
+from io import StringIO
 from pathlib import Path
-from typing_extensions import TypedDict
+from typing import Dict, Iterable, List, Sequence
+
+import pandas as pd
 import spacy
 from spacy.tokens import Doc
-import pandas as pd
 from tqdm import trange
+from typing_extensions import TypedDict
 
 CONLLU_FIELDS = [
     "ID",
