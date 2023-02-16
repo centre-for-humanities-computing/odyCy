@@ -114,7 +114,7 @@ commands:
   - name: install
     help: "Creating environments and installing dependencies"
     script:
-      - "bash scripts/dependencies/server_dependencies.sh"
+      # - "bash scripts/dependencies/server_dependencies.sh"
       - "bash scripts/dependencies/create_environments.sh"
     deps:
       - "requirements_preprocessing.txt"
@@ -297,5 +297,5 @@ commands:
 
   - name: push_xlm_separate
     script:
-      - "bash scripts/push.sh ${vars.exp_models.model_name_xlm_proiel} dep_proiel_trf ${vars.exp_models.package_version} grc"
-      - "bash scripts/push.sh ${vars.exp_models.model_name_xlm_perseus} dep_perseus_trf ${vars.exp_models.package_version} grc"
+      - "bash scripts/push.sh ${vars.exp_models.model_name_xlm_proiel} dep_proiel_xlm ${vars.exp_models.package_version} grc"
+      - "bash scripts/push.sh ${vars.exp_models.model_name_xlm_perseus} dep_perseus_xlm ${vars.exp_models.package_version} grc"
