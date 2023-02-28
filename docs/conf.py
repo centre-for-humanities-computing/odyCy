@@ -62,6 +62,7 @@ html_theme_options = {
         "color-api-pre-name": "#ffa671",
     },
 }
+html_context = {"default_mode": "light"}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

@@ -12,8 +12,8 @@ In addition performance also seems relatively stable across the two evaluation d
   In order to reproduce our measurements check out our repository for evaluation of ancient greek pipelines, `greevaluation <https://github.com/centre-for-humanities-computing/greevaluation>`_.
 
 
-Figures
--------
+Individual Tasks
+----------------
 
 Part-of-Speech Tagging
 ''''''''''''''''''''''
@@ -60,15 +60,26 @@ odyCy performs second best on PROIEL and has highest weighted average score in s
 .. raw:: html
    :file: _static/plots/Sentencization F1-score.html
 
+.. _performance lemmatization:
+
 Lemmatization
 '''''''''''''
+
 odyCy achieves the highest weighted average over the two test sets.
 
 .. raw:: html
    :file: _static/plots/Lemmatization Accuracy.html
 
-Tables
-------
+Our experiments have shown that our lemmatization pipeline's performance is comparable to
+that of its neural subcomponent. Therefore it's ambiguous which will result in better predictions.
+See: :ref:`Lemmatization <architecture lemmatization>`
+
+.. image:: _static/lemmatizer_comparison.png
+   :width: 800
+   :alt: Lemmatizer comparison
+
+Corpora
+-------
 
 Perseus
 ''''''''''''''''''''''
@@ -87,4 +98,3 @@ odyCy performs second best in POS-tagging, Morphological Analysis, Dependency Pa
 .. image:: _static/proiel_table.png
     :width: 800
     :alt: Performance on the PROIEL Treebank.
-
