@@ -4,7 +4,6 @@
     A general-purpose NLP pipeline for Ancient-Greek.
   </div>
 </p>
-
 <br>
 
 ## Features :mount_fuji:
