@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use our software, please cite us."
+authors:
+- family-names: "Kostkan"
+  given-names: "Jan"
+  orcid: "https://orcid.org/0000-0002-9707-7121"
+- family-names: "Kardos"
+  given-names: "Márton"
+  orcid: "https://orcid.org/0000-0001-9652-4498"
+title: "OdyCy – A general-purpose NLP pipeline for Ancient Greek"
+version: 0.1.0
+date-released: 2023-04-03
+url: "https://github.com/centre-for-humanities-computing/odyCy"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Kostkan"
+    given-names: "Jan"
+    orcid: "https://orcid.org/0000-0002-9707-7121"
+  - family-names: "Kardos"
+    given-names: "Márton"
+    orcid: "https://orcid.org/0000-0001-9652-4498"
+  - family-names: "P.B. Mortensen"
+    given-names: "Jacob"
+    orcid: "https://orcid.org/0000-0002-7153-3707"
+  - family-names: "L. Nielbo"
+    given-names: "Kristoffer"
+    orcid: "https://orcid.org/0000-0002-5116-5070"
+  journal: "The 7th Joint SIGHUM Workshop on Computational Linguistics for Cultural Heritage, Social Sciences, Humanities and Literature"
+  month: 5
+  url: "https://sighum.files.wordpress.com/2023/03/latech-clfl-2023-unofficial-proceedings.pdf"
+  start: 128
+  end: 134
+  title: "OdyCy – A general-purpose NLP pipeline for Ancient Greek"
+  year: 2023
+  issue: 1
+  volume: 1
+
