@@ -27,6 +27,8 @@ pip install https://huggingface.co/chcaa/grc_odycy_joint_sm/resolve/main/grc_ody
 
 ## Usage :whale:
 
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/centre-for-humanities-computing/odyCy/blob/main/tutorials/01_odycy_getting_started.ipynb#&offline=true&sandboxMode=true)
+
 OdyCy pipelines can be imported with spaCy.
 
 ```python
