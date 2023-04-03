@@ -19,7 +19,10 @@
 OdyCy models can be directly installed from huggingface:
 
 ```bash
-# TODO: We have to add a proper download link
+# To install the transformer-based pipeline
+pip install https://huggingface.co/chcaa/grc_odycy_joint_trf/resolve/main/grc_odycy_joint_trf-any-py3-none-any.whl
+# To install the tok2vec-based small pipeline
+pip install https://huggingface.co/chcaa/grc_odycy_joint_sm/resolve/main/grc_odycy_joint_sm-any-py3-none-any.whl
 ```
 
 ## Usage :whale:
@@ -29,7 +32,11 @@ OdyCy pipelines can be imported with spaCy.
 ```python
 import spacy
 
-nlp = spacy.load("grc_dep_treebanks_trf")  # TODO: Rename model here
+# For the transformer-based pipeline
+nlp = spacy.load("grc_odycy_joint_trf")
+
+# For a faster and smaller (but less accurate) tok2vec-based pipeline
+nlp = spacy.load("grc_odycy_joint_sm")
 ```
 
 Pipelines can then be used as any other spaCy pipeline.
