@@ -5,21 +5,15 @@
   </div>
 </p>
 
-
-<br>
-<br>
-
-This repository contains all code to reproduce our results.
-
-## Features
+## Features :mount_fuji:
 
  - [x] Part of speech tagging
  - [x] Lemmatization
  - [x] Dependency parsing
  - [x] Morphological analysis
- - [ ] Named entity recognition (work in progress)
+ - [ ] Named entity recognition (work in progress :construction:)
 
-## Installation
+## Installation :sunrise:
 
 odyCy models can be directly installed from huggingface:
 
@@ -27,7 +21,7 @@ odyCy models can be directly installed from huggingface:
 # TODO: We have to add a proper download link
 ```
 
-## Usage
+## Usage :whale:
 
 odyCy pipelines can be imported with spaCy.
 
@@ -40,7 +34,13 @@ nlp = spacy.load("grc_dep_treebanks_trf")  # TODO: Rename model here
 Pipelines can then be used as any other spaCy pipeline.
 ([spaCy Documentation](https://spacy.io/usage))
 
-For further information consult our Documentation (Add link).
+Check out our Documentation on [Basic Usage](https://centre-for-humanities-computing.github.io/odyCy/getting_started.html).
 
-## Performance
+## Performance :boat:
+
+odyCy achieves state of the art performance on multiple tasks on unseen test data from the Universal Dependencies Perseus treebank,
+and performs second best on the PROIEL treebank’s test set on even more tasks.
+In addition performance also seems relatively stable across the two evaluation datasets in comparison with other NLP pipelines.
+
+For plots and tables on OdyCy's performance, check out the Documentation page on [Performance](https://centre-for-humanities-computing.github.io/odyCy/performance.html)
 
