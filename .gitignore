@@ -30,6 +30,9 @@ tmp_*
 # Marton's stupid Python files
 mess_around.*
 
+# Exception for doc build
+!docs/_build/
+
 # Distribution / packaging
 .Python
 build/
