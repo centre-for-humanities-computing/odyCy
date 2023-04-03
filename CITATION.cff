@@ -8,7 +8,7 @@ authors:
   given-names: "Márton"
   orcid: "https://orcid.org/0000-0001-9652-4498"
 title: "OdyCy – A general-purpose NLP pipeline for Ancient Greek"
-version: 0.1.0
+version: 0.6.0
 date-released: 2023-04-03
 url: "https://github.com/centre-for-humanities-computing/odyCy"
 preferred-citation:

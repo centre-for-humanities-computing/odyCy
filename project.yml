@@ -4,35 +4,36 @@ description: >
 
 vars:
   lang: "grc"
-  # base models (dep)
+  # base models (dependencies)
+  # Currently these are the ones onn Huggingface
   base_model:
     config_trf: "transformer"
     config_sm: "sm"
-    model_name_sm: "grc_dep_treebanks_sm"
-    model_name_trf: "grc_dep_treebanks_trf"
-    package_name_sm: "dep_treebanks_sm" # TODO workaround
-    package_name_trf: "dep_treebanks_trf" # TODO workaround
+    model_name_sm: "grc_odycy_joint_sm"
+    model_name_trf: "grc_odycy_joint_trf"
+    package_name_sm: "odycy_joint_sm" # TODO workaround
+    package_name_trf: "odycy_joint_trf" # TODO workaround
     training_corpus: "joint"
-    package_version: "0.5.0"
-  # ner models (core)
+    package_version: "0.6.0"
+  # ner models (models with dep+ner)
   ner_model:
     config_trf: "transformer_ner"
     config_sm: "sm_ner"
-    model_name_sm: "grc_homercy_treebanks_sm"
-    model_name_trf: "grc_homercy_treebanks_trf"
-    package_name_sm: "homercy_treebanks_sm" # TODO workaround
-    package_name_trf: "homercy_treebanks_trf" # TODO workaround
+    model_name_sm: "grc_ner_joint_sm"
+    model_name_trf: "grc_ner_joint_trf"
+    package_name_sm: "ner_joint_sm" # TODO workaround
+    package_name_trf: "ner_joint_trf" # TODO workaround
     training_corpus: "ner"
     package_version: "0.0.1"
   # experimental models
   exp_models:
     config_trf: "transformer"
     config_xlm: "transformer_multilingual"
-    model_name_trf_proiel: "grc_dep_proiel_trf"
-    model_name_trf_perseus: "grc_dep_perseus_trf"
-    model_name_xlm_base: "grc_dep_treebanks_xlm"
-    model_name_xlm_proiel: "grc_dep_proiel_xlm"
-    model_name_xlm_perseus: "grc_dep_perseus_xlm"
+    model_name_trf_proiel: "grc_exp_proiel_trf"
+    model_name_trf_perseus: "grc_exp_perseus_trf"
+    model_name_xlm_base: "grc_exp_joint_xlm"
+    model_name_xlm_proiel: "grc_exp_proiel_xlm"
+    model_name_xlm_perseus: "grc_exp_perseus_xlm"
     package_version: "0.0.0"
   # misc
   gpu: 0
