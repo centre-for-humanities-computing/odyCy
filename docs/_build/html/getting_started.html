@@ -169,6 +169,7 @@
 <li class="toctree-l1"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Pipeline Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="small_model.html">Small Pipeline</a></li>
 </ul>
 
 </div>
@@ -206,7 +207,14 @@
           <section id="installation">
 <span id="getting-started"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h1>
 <p>You can install odyCy from Huggingface Hub.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install <span class="c1"># TODO: Add link</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># To install the transformer-based pipeline</span>
+pip install https://huggingface.co/chcaa/grc_odycy_joint_trf/resolve/main/grc_odycy_joint_trf-any-py3-none-any.whl
+</pre></div>
+</div>
+<p>If you want to install a faster, <a class="reference internal" href="small_model.html#small-model"><span class="std std-ref">smaller but less accurate pipeline</span></a>
+run the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># To install the small pipeline</span>
+pip install https://huggingface.co/chcaa/grc_odycy_joint_sm/resolve/main/grc_odycy_joint_sm-any-py3-none-any.whl
 </pre></div>
 </div>
 </section>
@@ -215,7 +223,10 @@
 <p>You can load odyCy pipelines in your scripts with spaCy.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
 
-<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;grc_dep_treebanks_trf&quot;</span><span class="p">)</span>  <span class="c1"># TODO: Rename model here</span>
+<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;grc_odycy_joint_trf&quot;</span><span class="p">)</span>
+
+<span class="c1"># Or if you want to load the small model:</span>
+<span class="c1"># nlp = spacy.load(&quot;grc_odycy_joint_sm&quot;)</span>
 </pre></div>
 </div>
 <p>spaCy pipelines are callable so you can process text by calling the pipeline with them.</p>

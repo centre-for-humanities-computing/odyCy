@@ -21,6 +21,12 @@ and from the `First Thousand Years of Greek Project <https://github.com/OpenGree
 
 This model was not freezed during training meaning it was finetuned for all downstream tasks simultaneously.
 
+.. admonition:: Computational Efficiency
+   :class: note
+
+   Transformer models are generally quite heavy-weight, both in terms of memory and processing power.
+   If you want a lightweight, non-transformer-based pipeline, we recommend our :ref:`Small Pipeline <small model>`
+
 Parser
 ------
 A `Transition Based Parser <https://spacy.io/api/architectures#TransitionBasedParser>`_ was used

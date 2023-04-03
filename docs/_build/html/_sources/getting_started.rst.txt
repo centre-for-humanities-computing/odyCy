@@ -7,7 +7,17 @@ You can install odyCy from Huggingface Hub.
 
 .. code-block:: bash
 
-   pip install # TODO: Add link
+    # To install the transformer-based pipeline
+    pip install https://huggingface.co/chcaa/grc_odycy_joint_trf/resolve/main/grc_odycy_joint_trf-any-py3-none-any.whl
+
+If you want to install a faster, :ref:`smaller but less accurate pipeline <small model>`
+run the following:
+
+.. code-block:: bash
+
+    # To install the small pipeline
+    pip install https://huggingface.co/chcaa/grc_odycy_joint_sm/resolve/main/grc_odycy_joint_sm-any-py3-none-any.whl
+
 
 Basic Usage
 ===========
@@ -18,7 +28,10 @@ You can load odyCy pipelines in your scripts with spaCy.
 
    import spacy
 
-   nlp = spacy.load("grc_dep_treebanks_trf")  # TODO: Rename model here
+   nlp = spacy.load("grc_odycy_joint_trf")
+
+   # Or if you want to load the small model:
+   # nlp = spacy.load("grc_odycy_joint_sm")
 
 spaCy pipelines are callable so you can process text by calling the pipeline with them.
 

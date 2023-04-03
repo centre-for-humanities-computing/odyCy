@@ -98,3 +98,14 @@ odyCy performs second best in POS-tagging, Morphological Analysis, Dependency Pa
 .. image:: _static/proiel_table.png
     :width: 800
     :alt: Performance on the PROIEL Treebank.
+
+Speed
+-----
+
+We measured word per second performance on a joint test set on an Intel Xeon Gold 6130 on a single core with SpaCy's CLI.
+As such only models with a SpaCy wrapper could be tested.
+
+Higher score means better.
+
+.. raw:: html
+   :file: _static/plots/speed.html

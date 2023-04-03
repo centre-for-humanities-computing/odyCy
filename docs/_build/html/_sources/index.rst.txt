@@ -16,4 +16,5 @@ reliable and modular.
    getting_started
    performance
    architecture
+   small_model
 
