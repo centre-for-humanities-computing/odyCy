@@ -1,6 +1,6 @@
 <p align="center">
   <img width="200" src="docs/_static/logo_with_text_below.svg">
-  <div align="center" style="color: #2c5882; font-weight: bold; font-size: 14px; margin-top: -16px;">
+  <div align="center" style="color: #2c5882; font-weight: bold; font-size: 14px; margin-top: -18px;">
     A state of the art NLP pipeline for Ancient Greek.
   </div>
 </p>
@@ -15,7 +15,7 @@
 
 ## Installation :sunrise:
 
-odyCy models can be directly installed from huggingface:
+OdyCy models can be directly installed from huggingface:
 
 ```bash
 # TODO: We have to add a proper download link
@@ -23,7 +23,7 @@ odyCy models can be directly installed from huggingface:
 
 ## Usage :whale:
 
-odyCy pipelines can be imported with spaCy.
+OdyCy pipelines can be imported with spaCy.
 
 ```python
 import spacy
