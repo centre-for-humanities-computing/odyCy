@@ -66,7 +66,6 @@ workflows:
     - train_sm_base
     - evaluate_sm_base
     - package_sm_base
-    - push_sm_base
   all_trf_base:
     - install
     - fetch_assets
@@ -74,7 +73,6 @@ workflows:
     - train_trf_base
     - evaluate_trf_base
     - package_trf_base
-    - push_trf_base
   all_sm_ner:
     - install
     - fetch_assets
