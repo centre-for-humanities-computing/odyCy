@@ -5,7 +5,7 @@ description: >
 vars:
   lang: "grc"
   # base models (dependencies)
-  # Currently these are the ones onn Huggingface
+  # Currently these are the ones on Huggingface
   base_model:
     config_trf: "transformer"
     config_sm: "sm"
@@ -14,11 +14,11 @@ vars:
     package_name_sm: "odycy_joint_sm" # TODO workaround
     package_name_trf: "odycy_joint_trf" # TODO workaround
     training_corpus: "joint"
-    package_version: "0.6.0"
+    package_version: "0.7.0"
   # ner models (models with dep+ner)
   ner_model:
-    config_trf: "transformer_ner"
-    config_sm: "sm_ner"
+    config_trf: "transformer_ner-v3.5"
+    config_sm: "sm_ner-v3.5"
     model_name_sm: "grc_ner_joint_sm"
     model_name_trf: "grc_ner_joint_trf"
     package_name_sm: "ner_joint_sm" # TODO workaround
@@ -28,7 +28,7 @@ vars:
   # experimental models
   exp_models:
     config_trf: "transformer"
-    config_xlm: "transformer_multilingual"
+    config_xlm: "transformer_multilingual-v3.5"
     model_name_trf_proiel: "grc_exp_proiel_trf"
     model_name_trf_perseus: "grc_exp_perseus_trf"
     model_name_xlm_base: "grc_exp_joint_xlm"
@@ -37,7 +37,7 @@ vars:
     package_version: "0.0.0"
   # misc
   gpu: 0
-  spacy_version: ">=3.5.0"
+  spacy_version: ">=3.7.0"
 
 directories: ["assets", "corpus", "training", "scripts"]
 
@@ -66,7 +66,6 @@ workflows:
     - train_sm_base
     - evaluate_sm_base
     - package_sm_base
-    - push_sm_base
   all_trf_base:
     - install
     - fetch_assets
@@ -74,7 +73,6 @@ workflows:
     - train_trf_base
     - evaluate_trf_base
     - package_trf_base
-    - push_trf_base
   all_sm_ner:
     - install
     - fetch_assets
